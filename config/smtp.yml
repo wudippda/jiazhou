@@ -1,0 +1,9 @@
+development: &development
+  address: "mail.sap.corp"
+  port: 25
+  openssl_verify_mode: 'none'
+  enable_starttls_auto: true
+
+production:
+  <<: *development
+  default_from: "francis.zhong@sap.com"
