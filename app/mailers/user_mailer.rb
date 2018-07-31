@@ -15,10 +15,10 @@ class UserMailer < ApplicationMailer
   end
 
   def set_email_configuration
-    @smtp_settings = YAML::load(open(File.join(Rails.root, "config", "smtp.yml")).read)[Rails.env]
-    Rails.logger.debug(@smtp_settings.symbolize_keys)
-    mail.delivery_method.settings.merge!(@smtp_settings.symbolize_keys)
-    Rails.logger.debug(mail.delivery_method.settings)
+    @email_settings = EmailSettingHelper.get_email_setting(Rails.env)
+    Rails.logger.debug(@email_settings.symbolize_keys)
+    mail.delivery_method.settings.merge!(@email_settings.symbolize_keys)
+    Rails.logger.info(mail.delivery_method.settings)
   end
 
 end

@@ -16,6 +16,6 @@ require 'test/unit'
     end
 
     test "test send a simple email" do
-      #UserMailer.with(User.new(id: 1, email: "francis.zhong@sap.com")).incoming_email
+
     end
   end
