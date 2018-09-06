@@ -28,9 +28,9 @@ export default async(type = 'GET', url = '', data = null, method = 'normal') => 
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                xhrFields: {
-                    withCredentials: true
-                },
+                // xhrFields: {
+                //     withCredentials: true
+                // },
                 crossDomain: true,
                 data: JSON.stringify(data),
                 timeout: 10000

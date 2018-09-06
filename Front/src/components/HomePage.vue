@@ -5,11 +5,15 @@
                 <Menu :active-name="activeName" theme="dark" width="auto" :class="menuitemClasses" @on-select="dealSelect" style="height: 100%">
                     <MenuItem name="dashboard">
                         <Icon type="clipboard"></Icon>
-                        <span>Dashboard</span>
+                        <span>{{lanDisplay[languageType]['SiderBar']['dashboardPage']}}</span>
                     </MenuItem>
-                    <MenuItem name="tablePage">
-                        <Icon type="clipboard"></Icon>
-                        <span>Table</span>
+                    <MenuItem name="housePage">
+                        <Icon type="ios-home"></Icon>
+                        <span>{{lanDisplay[languageType]['SiderBar']['housePage']}}</span>
+                    </MenuItem>
+                    <MenuItem name="emailSettingPage">
+                        <Icon type="ios-email"></Icon>
+                        <span>{{lanDisplay[languageType]['SiderBar']['emailSettingPage']}}</span>
                     </MenuItem>
                     <MenuItem name="logout" class="logout-item">
                         <Icon type="log-out"></Icon>
@@ -20,8 +24,9 @@
             <Layout>
                 <Header :style="{padding: 0}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0', float: 'left', cursor: 'pointer'}" type="navicon-round" size="24"></Icon>
-                    <h1 class="big-title">Title</h1>
-                     <img src="../assets/Logo.jpg" alt="" class="Logo">                    
+                    <h1 class="big-title">{{lanDisplay[languageType]['Header']['title']}}</h1>
+                     <!-- <img src="../assets/Logo.jpg" alt="" class="Logo">                     -->
+                    <Button size="small" class="language-switch" @click="changeLan">{{languageType}}</Button>
                 </Header>
                 <Content :style="{margin: '20px', minHeight: '260px'}">
                     <router-view ref="container"></router-view>
@@ -33,13 +38,16 @@
 
 <script>
 // import { getNotification, checkNotification } from '../service/apis'
+import { lan } from '../../config/languageConf'
 export default {
     data () {
         return {
             isCollapsed: false,
             activeName: 'dashboard',
             intervalId: -1,
-            unCheckedNotifications: []
+            unCheckedNotifications: [],
+            languageType: 'CN',
+            lanDisplay: {}
         }
     },
     computed: {
@@ -57,6 +65,12 @@ export default {
         }
     },
     methods: {
+        changeLan () {
+            if (this.languageType === 'CN')
+                this.languageType = 'EN'
+            else
+                this.languageType = 'CN'
+        },
         collapsedSider () {
             this.$refs.side.toggleCollapse();
         },
@@ -69,9 +83,13 @@ export default {
                     this.activeName = 'dashboard'
                     this.$router.push({name: 'dashboard', params: {userId: this.$session.get('UserId')}})
                     break
-                case 'tablePage':
-                    this.activeName = 'tablePage'
-                    this.$router.push({name: 'table'})
+                case 'housePage':
+                    this.activeName = 'housePage'
+                    this.$router.push({name: 'housePage'})
+                    break
+                case 'emailSettingPage':
+                    this.activeName = 'emailSettingPage'
+                    this.$router.push({name: 'emailSetting'})
                     break
                 default:
                     break
@@ -88,9 +106,11 @@ export default {
             case 'dashboard':
                 this.activeName = 'dashboard'
                 break
-            case 'table':
-                this.activeName = 'tablePage'
+            case 'housePage':
+                this.activeName = 'housePage'
                 break
+            case 'emailSetting':
+                this.activeName = 'emailSettingPage'
             default:
                 break
         }
@@ -126,6 +146,9 @@ export default {
         //         console.error(err)
         //     })
         // }, 5000)
+        
+        // setup language
+        this.lanDisplay = lan
     },
     beforeDestroy () {
         // clearInterval(this.intervalId)
@@ -200,5 +223,12 @@ export default {
         right: 40px;
         top: 8px;
         height: 49px;
+    }
+    .language-switch {
+        position: absolute;
+        right: 40px;
+        top: 20px;
+        height: 20px;
+        font-size: 0.7em;
     }
 </style>
