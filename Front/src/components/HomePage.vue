@@ -215,7 +215,7 @@ export default {
         font-size: 1.2em;
     }
     .logout-item {
-        position: absolute;
+        position: absolute !important;
         bottom: 0;
         width: 100%;
     }
