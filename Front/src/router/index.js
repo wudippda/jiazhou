@@ -37,7 +37,7 @@ export default new Router({
                     component: HousePage
                 },
                 {
-                    path: '/emailSetting',
+                    path: '/emailSetting/:lan',
                     name: 'emailSetting',
                     component: EmailSettingPage
                 }

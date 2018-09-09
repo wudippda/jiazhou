@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-        <Layout style="height: 100%; width: 100%">
+        <Layout style="height: 100%; width: 100%">            
             <Sider ref="side" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
                 <Menu :active-name="activeName" theme="dark" width="auto" :class="menuitemClasses" @on-select="dealSelect" style="height: 100%">
                     <MenuItem name="dashboard">
@@ -70,6 +70,7 @@ export default {
                 this.languageType = 'EN'
             else
                 this.languageType = 'CN'
+            this.dealSelect(this.activeName)
         },
         collapsedSider () {
             this.$refs.side.toggleCollapse();
@@ -89,7 +90,7 @@ export default {
                     break
                 case 'emailSettingPage':
                     this.activeName = 'emailSettingPage'
-                    this.$router.push({name: 'emailSetting'})
+                    this.$router.push({name: 'emailSetting', params: {lan: this.languageType}})
                     break
                 default:
                     break

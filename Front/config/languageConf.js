@@ -9,9 +9,17 @@ var lan = {
             emailSettingPage: 'Email'
         },
         EmailSettingPage: {
-            panelTitle: 'Basic configuration',
+            panelTitle: 'Basic Configuration',
             address: 'Address',
-            port: 'Port'
+            port: 'Port',
+            changeTitle: 'Upadte Configuration',
+            sbButton: 'Submit',
+            errors: {
+                failToGet: {
+                    title: 'Sorry',
+                    desc: 'Fail to get email setting from server'
+                }
+            }
         }
     },
     CN: {
@@ -26,7 +34,15 @@ var lan = {
         EmailSettingPage: {
             panelTitle: '配置基本信息',
             address: '地址',
-            port: '端口'
+            port: '端口',
+            changeTitle: '更新配置',
+            sbButton: '提交'
+        },
+        errors: {
+            failToGet: {
+                title: '出错了',
+                desc: '获取配置失败'
+            }
         }
     }
 }
