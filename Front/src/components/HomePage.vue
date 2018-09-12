@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
         <Layout style="height: 100%; width: 100%">            
-            <Sider ref="side" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+            <Sider ref="side" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed" default-collapsed="true">
                 <Menu :active-name="activeName" theme="dark" width="auto" :class="menuitemClasses" @on-select="dealSelect" style="height: 100%">
                     <MenuItem name="dashboard">
                         <Icon type="clipboard"></Icon>
@@ -17,14 +17,14 @@
                     </MenuItem>
                     <MenuItem name="logout" class="logout-item">
                         <Icon type="log-out"></Icon>
-                        <span>Logout</span>
+                        <span>{{lanDisplay[languageType]['SiderBar']['logOut']}}</span>
                     </MenuItem>
                 </Menu>
             </Sider>
             <Layout>
                 <Header :style="{padding: 0}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0', float: 'left', cursor: 'pointer'}" type="navicon-round" size="24"></Icon>
-                    <h1 class="big-title">{{lanDisplay[languageType]['Header']['title']}}</h1>
+                    <h1 :class="[isSmall ? 'big-title-s':'big-title-l']">{{lanDisplay[languageType]['Header']['title']}}</h1>
                      <!-- <img src="../assets/Logo.jpg" alt="" class="Logo">                     -->
                     <Button size="small" class="language-switch" @click="changeLan">{{languageType}}</Button>
                 </Header>
@@ -47,7 +47,10 @@ export default {
             intervalId: -1,
             unCheckedNotifications: [],
             languageType: 'CN',
-            lanDisplay: {}
+            lanDisplay: {},
+            clientWidth: 0,
+            clientHeight: 0,
+            isSmall: false
         }
     },
     computed: {
@@ -73,6 +76,8 @@ export default {
             this.dealSelect(this.activeName)
         },
         collapsedSider () {
+            if (this.isSmall)
+                return
             this.$refs.side.toggleCollapse();
         },
         dealSelect(name) {
@@ -115,6 +120,15 @@ export default {
             default:
                 break
         }
+
+        // Adaptation
+        const that = this
+        that.clientWidth = document.documentElement.clientWidth
+        that.clientHeight = document.documentElement.clientHeight
+        window.onresize = function test() {
+            that.clientWidth = document.documentElement.clientWidth
+            that.clientHeight = document.documentElement.clientHeight
+        }
     },
     beforeCreate () {
         // if (!this.$session.exists()) {
@@ -153,6 +167,17 @@ export default {
     },
     beforeDestroy () {
         // clearInterval(this.intervalId)
+    },
+    watch: {
+        clientWidth(val) {
+            this.clientWidth = val
+            if (val < 380) {
+                this.isCollapsed = true
+                this.isSmall = true
+            } else {
+                this.isSmall = false
+            }
+        }
     }
 }
 </script>
@@ -210,9 +235,15 @@ export default {
         vertical-align: middle;
         font-size: 22px;
     }
-    .big-title {
+    .big-title-l {
         font-weight: 400;
         font-size: 1.2em;
+    }
+    .big-title-s {
+        font-weight: 200;
+        font-size: 0.9em;
+        float: left;
+        margin-left: 4.0em;
     }
     .logout-item {
         position: absolute !important;

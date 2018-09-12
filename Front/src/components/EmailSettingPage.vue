@@ -7,7 +7,7 @@
                 <p slot="title">{{lanDisplay[languageType][name]['panelTitle']}}</p>
                 <Row type="flex" justify="center">
                     <Col span="20">
-                        <Form :model="emailSetting" label-width="80" v-if="emailSetting !== {}">
+                        <Form :model="emailSetting" :label-width="isSmall ? 50:80" v-if="emailSetting !== {}">
                             <FormItem :label="lanDisplay[languageType][name]['address']">
                                 {{emailSetting.address}}
                             </FormItem>
@@ -27,12 +27,12 @@
                 <p slot="title">{{lanDisplay[languageType][name]['changeTitle']}}</p>
                 <Row type="flex" justify="center">
                     <Col span="20">
-                        <Form :model="emailSetting" label-width="80" v-if="emailSetting !== {}">
+                        <Form :model="emailSetting" :label-width="isSmall ? 50:80" v-if="emailSetting !== {}">
                             <FormItem :label="lanDisplay[languageType][name]['address']">
-                                <Input size="small" style="width: 20%; float: left"></Input>
+                                <Input size="small" style="width: 70%; float: left"></Input>
                             </FormItem>
                             <FormItem :label="lanDisplay[languageType][name]['port']">
-                                <Input size="small" style="width: 10%; float: left"></Input>
+                                <Input size="small" style="width: 50%; float: left"></Input>
                             </FormItem>
                             <Button type="success">{{lanDisplay[languageType][name]['sbButton']}}</Button>
                         </Form>
@@ -55,7 +55,10 @@ export default {
             name: 'EmailSettingPage',
             lanDisplay: {},
             languageType: 'CN',
-            emailSetting: {}
+            emailSetting: {},
+            clientWidth: 0,
+            clientHeight: 0,
+            isSmall: false
         }
     },
     methods: {
@@ -76,9 +79,28 @@ export default {
         this.lanDisplay = lan
         this.languageType = this.$route.params.lan
     },
+    mounted () {
+        // Adaptation
+        const that = this
+        that.clientWidth = document.documentElement.clientWidth
+        that.clientHeight = document.documentElement.clientHeight
+        window.onresize = function test() {
+            that.clientWidth = document.documentElement.clientWidth
+            that.clientHeight = document.documentElement.clientHeight
+        }
+    },
     watch: {
         '$route' (to, from) {
             this.languageType = to.params.lan
+        },
+        clientWidth(val) {
+            this.clientWidth = val
+            
+            if (val < 380) {
+                this.isSmall = true
+            } else {
+                this.isSmall = false
+            }
         }
     }
 }

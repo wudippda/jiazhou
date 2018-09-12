@@ -1,12 +1,13 @@
 var lan = {
     EN: {
         Header: {
-            title: 'California house renting service backend'
+            title: 'House Renting'
         },
         SiderBar: {
             dashboardPage: 'Dashboard',
             housePage: 'Houses',
-            emailSettingPage: 'Email'
+            emailSettingPage: 'Email',
+            logOut: 'logout'
         },
         EmailSettingPage: {
             panelTitle: 'Basic Configuration',
@@ -24,12 +25,13 @@ var lan = {
     },
     CN: {
         Header: {
-            title: '加州租房管理系统'
+            title: '加州租房'
         },
         SiderBar: {
             dashboardPage: '展示面板',
             housePage: '房屋信息',
-            emailSettingPage: '邮件配置'
+            emailSettingPage: '邮件配置',
+            logOut: '登出'
         },
         EmailSettingPage: {
             panelTitle: '配置基本信息',
