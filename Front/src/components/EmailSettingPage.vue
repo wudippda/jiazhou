@@ -96,7 +96,7 @@ export default {
         clientWidth(val) {
             this.clientWidth = val
             
-            if (val < 380) {
+            if (val < 420) {
                 this.isSmall = true
             } else {
                 this.isSmall = false

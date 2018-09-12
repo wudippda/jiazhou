@@ -171,7 +171,7 @@ export default {
     watch: {
         clientWidth(val) {
             this.clientWidth = val
-            if (val < 380) {
+            if (val < 420) {
                 this.isCollapsed = true
                 this.isSmall = true
             } else {
@@ -243,7 +243,7 @@ export default {
         font-weight: 200;
         font-size: 0.9em;
         float: left;
-        margin-left: 4.0em;
+        margin-left: 6.0em;
     }
     .logout-item {
         position: absolute !important;
