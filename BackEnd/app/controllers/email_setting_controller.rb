@@ -1,4 +1,5 @@
 class EmailSettingController < ApplicationController
+  skip_before_action :verify_authenticity_token, raise: false
 
   PERMITTED_SETTING_PARAMS = %w(address port openssl_verify_mode enable_starttls_auto).map(&:to_sym)
 
@@ -13,7 +14,8 @@ class EmailSettingController < ApplicationController
     success = true
     env = Rails.env
     # Need to take care if the input json is malicious
-    @options = params.require(:options).permit(PERMITTED_SETTING_PARAMS)
+    @options = JSON.parse(params.require(:options))
+    @options = ActionController::Parameters.new(@options).permit(PERMITTED_SETTING_PARAMS)
     @email_setting = EmailSettingHelper.get_email_setting
     @email_setting[env].merge!(@options) if @options != nil
     Rails.logger.info(@email_setting)
@@ -30,5 +32,4 @@ class EmailSettingController < ApplicationController
       format.all { render json: { success: success }}
     end
   end
-
 end
