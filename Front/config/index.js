@@ -43,7 +43,7 @@ module.exports = {
         // Paths
         assetsRoot: path.resolve(__dirname, '../dist'),
         assetsSubDirectory: 'static',
-        assetsPublicPath: '/',
+        assetsPublicPath: './',
 
         /**
          * Source Maps
@@ -66,5 +66,5 @@ module.exports = {
         // Set to `true` or `false` to always turn it on or off
         bundleAnalyzerReport: process.env.npm_config_report
     },
-    baseUrl: 'http://localhost:8082/'
+    baseUrl: 'http://hjyheart.com:3000/'
 }

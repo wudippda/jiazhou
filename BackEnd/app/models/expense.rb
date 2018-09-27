@@ -1,4 +1,4 @@
 class Expense < ApplicationRecord
-  has_one :property
+  belongs_to :property
   has_one :tenant
 end

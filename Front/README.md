@@ -35,3 +35,20 @@ module.exports = {
   }  
 } 
 ```
+
+### wrong path for fonts
+
+change webpack configuration:
+
+``` js
+[webpack.prod.conf.js]
+module: {
+  rules: utils.styleLoaders({
+      sourceMap: config.build.productionSourceMap,
+      extract: false,
+      usePostCSS: true
+  })
+}
+```
+
+let extract be false

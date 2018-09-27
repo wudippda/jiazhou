@@ -1,5 +1,7 @@
 <template>
     <div class="dashboard-container">
+        <h1 style="font-size: 4em">In developing</h1>
+        <br>
         <Table border :columns="columns" :data="dataSource"></Table>
         <br>
         <Page :total="pageTotal" size="small" @on-change="changePage"></Page>

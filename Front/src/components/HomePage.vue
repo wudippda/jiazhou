@@ -1,27 +1,32 @@
 <template>
   <div class="layout">
-        <Layout style="height: 100%; width: 100%">
-            <Sider ref="side" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+        <Layout style="height: 100%; width: 100%">            
+            <Sider ref="side" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed" default-collapsed="true">
                 <Menu :active-name="activeName" theme="dark" width="auto" :class="menuitemClasses" @on-select="dealSelect" style="height: 100%">
                     <MenuItem name="dashboard">
                         <Icon type="clipboard"></Icon>
-                        <span>Dashboard</span>
+                        <span>{{lanDisplay[languageType]['SiderBar']['dashboardPage']}}</span>
                     </MenuItem>
-                    <MenuItem name="tablePage">
-                        <Icon type="clipboard"></Icon>
-                        <span>Table</span>
+                    <MenuItem name="housePage">
+                        <Icon type="ios-home"></Icon>
+                        <span>{{lanDisplay[languageType]['SiderBar']['housePage']}}</span>
+                    </MenuItem>
+                    <MenuItem name="emailSettingPage">
+                        <Icon type="ios-email"></Icon>
+                        <span>{{lanDisplay[languageType]['SiderBar']['emailSettingPage']}}</span>
                     </MenuItem>
                     <MenuItem name="logout" class="logout-item">
                         <Icon type="log-out"></Icon>
-                        <span>Logout</span>
+                        <span>{{lanDisplay[languageType]['SiderBar']['logOut']}}</span>
                     </MenuItem>
                 </Menu>
             </Sider>
             <Layout>
                 <Header :style="{padding: 0}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0', float: 'left', cursor: 'pointer'}" type="navicon-round" size="24"></Icon>
-                    <h1 class="big-title">Title</h1>
-                     <img src="../assets/Logo.jpg" alt="" class="Logo">                    
+                    <h1 :class="[isSmall ? 'big-title-s':'big-title-l']">{{lanDisplay[languageType]['Header']['title']}}</h1>
+                     <!-- <img src="../assets/Logo.jpg" alt="" class="Logo">                     -->
+                    <Button size="small" class="language-switch" @click="changeLan">{{languageType}}</Button>
                 </Header>
                 <Content :style="{margin: '20px', minHeight: '260px'}">
                     <router-view ref="container"></router-view>
@@ -33,13 +38,19 @@
 
 <script>
 // import { getNotification, checkNotification } from '../service/apis'
+import { lan } from '../../config/languageConf'
 export default {
     data () {
         return {
             isCollapsed: false,
             activeName: 'dashboard',
             intervalId: -1,
-            unCheckedNotifications: []
+            unCheckedNotifications: [],
+            languageType: 'CN',
+            lanDisplay: {},
+            clientWidth: 0,
+            clientHeight: 0,
+            isSmall: false
         }
     },
     computed: {
@@ -57,7 +68,16 @@ export default {
         }
     },
     methods: {
+        changeLan () {
+            if (this.languageType === 'CN')
+                this.languageType = 'EN'
+            else
+                this.languageType = 'CN'
+            this.dealSelect(this.activeName)
+        },
         collapsedSider () {
+            if (this.isSmall)
+                return
             this.$refs.side.toggleCollapse();
         },
         dealSelect(name) {
@@ -69,9 +89,13 @@ export default {
                     this.activeName = 'dashboard'
                     this.$router.push({name: 'dashboard', params: {userId: this.$session.get('UserId')}})
                     break
-                case 'tablePage':
-                    this.activeName = 'tablePage'
-                    this.$router.push({name: 'table'})
+                case 'housePage':
+                    this.activeName = 'housePage'
+                    this.$router.push({name: 'housePage'})
+                    break
+                case 'emailSettingPage':
+                    this.activeName = 'emailSettingPage'
+                    this.$router.push({name: 'emailSetting', params: {lan: this.languageType}})
                     break
                 default:
                     break
@@ -88,11 +112,22 @@ export default {
             case 'dashboard':
                 this.activeName = 'dashboard'
                 break
-            case 'table':
-                this.activeName = 'tablePage'
+            case 'housePage':
+                this.activeName = 'housePage'
                 break
+            case 'emailSetting':
+                this.activeName = 'emailSettingPage'
             default:
                 break
+        }
+
+        // Adaptation
+        const that = this
+        that.clientWidth = document.documentElement.clientWidth
+        that.clientHeight = document.documentElement.clientHeight
+        window.onresize = function test() {
+            that.clientWidth = document.documentElement.clientWidth
+            that.clientHeight = document.documentElement.clientHeight
         }
     },
     beforeCreate () {
@@ -126,9 +161,23 @@ export default {
         //         console.error(err)
         //     })
         // }, 5000)
+        
+        // setup language
+        this.lanDisplay = lan
     },
     beforeDestroy () {
         // clearInterval(this.intervalId)
+    },
+    watch: {
+        clientWidth(val) {
+            this.clientWidth = val
+            if (val < 420) {
+                this.isCollapsed = true
+                this.isSmall = true
+            } else {
+                this.isSmall = false
+            }
+        }
     }
 }
 </script>
@@ -186,12 +235,18 @@ export default {
         vertical-align: middle;
         font-size: 22px;
     }
-    .big-title {
+    .big-title-l {
         font-weight: 400;
         font-size: 1.2em;
     }
+    .big-title-s {
+        font-weight: 200;
+        font-size: 0.9em;
+        float: left;
+        margin-left: 6.0em;
+    }
     .logout-item {
-        position: absolute;
+        position: absolute !important;
         bottom: 0;
         width: 100%;
     }
@@ -200,5 +255,12 @@ export default {
         right: 40px;
         top: 8px;
         height: 49px;
+    }
+    .language-switch {
+        position: absolute;
+        right: 40px;
+        top: 20px;
+        height: 20px;
+        font-size: 0.7em;
     }
 </style>

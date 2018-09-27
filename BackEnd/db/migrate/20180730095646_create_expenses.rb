@@ -5,7 +5,7 @@ class CreateExpenses < ActiveRecord::Migration[5.1]
       t.string :date
       t.string :type
       t.text :comment
-
+      t.belongs_to :property, index: true
       t.timestamps
     end
   end

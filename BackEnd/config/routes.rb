@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
 
-  resources :report
   get 'report/index'
   post 'report/send_email' => "report#send_email"
+  get 'report/parse_report' => "report#parse_report"
 
   get 'email_setting/get_setting' => "email_setting#get_email_setting"
   post 'email_setting/update_setting' => "email_setting#update_email_setting"
