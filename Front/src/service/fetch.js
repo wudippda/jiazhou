@@ -50,9 +50,9 @@ export default async(type = 'GET', url = '', data = null, method = 'normal') => 
                 url: url,
                 processData: false,
                 contentType: false,
-                xhrFields: {
-                    withCredentials: server == 'base' ? true : false
-                },
+                // xhrFields: {
+                //     withCredentials: server == 'base' ? true : false
+                // },
                 crossDomain: true,
                 data: formData,
                 timeout: 1000000

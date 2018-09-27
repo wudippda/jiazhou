@@ -29,24 +29,36 @@
                     <Col span="20">
                         <Form :model="emailSetting" :label-width="isSmall ? 50:80" v-if="emailSetting !== {}">
                             <FormItem :label="lanDisplay[languageType][name]['address']">
-                                <Input size="small" style="width: 70%; float: left"></Input>
+                                <Input size="small" style="width: 70%; float: left" v-model="newAddress"></Input>
                             </FormItem>
                             <FormItem :label="lanDisplay[languageType][name]['port']">
-                                <Input size="small" style="width: 50%; float: left"></Input>
+                                <Input size="small" style="width: 50%; float: left" v-model="newPort"></Input>
                             </FormItem>
-                            <Button type="success">{{lanDisplay[languageType][name]['sbButton']}}</Button>
+                            <Button type="success" @click="isUpdate=true">{{lanDisplay[languageType][name]['sbButton']}}</Button>
                         </Form>
                     </Col>
                 </Row>
             </Card>
           </Col>
       </Row>
+
+      <Modal
+        v-if="lanDisplay[languageType][name]['confirmModal'] !== undefined"
+        v-model="isUpdate"
+        :title="lanDisplay === {} ? '' : lanDisplay[languageType][name]['confirmModal']['title']"
+        @on-ok="updateSetting"
+        :ok-text="lanDisplay === {} ? '' : lanDisplay[languageType][name]['confirmModal']['okText']"
+        :cancel-text="lanDisplay === {} ? '' : lanDisplay[languageType][name]['confirmModal']['cancelText']"
+        @on-cancel="cancel">
+        <p>{{lanDisplay[languageType][name]['confirmModal']['content']}}</p>
+      </Modal>
+
     </div>
 </template>
 
 <script>
 // TODO: Edit Email configuration
-import { getEmailSetting } from '../service/apis.js'
+import { getEmailSetting, updateEmailSetting } from '../service/apis.js'
 import { lan } from '../../config/languageConf.js'
 
 export default {
@@ -58,11 +70,43 @@ export default {
             emailSetting: {},
             clientWidth: 0,
             clientHeight: 0,
-            isSmall: false
+            isSmall: false,
+            isUpdate: false,
+            newAddress: '',
+            newPort: ''
         }
     },
     methods: {
+        updateSetting () {
 
+            let formData = `{"address": "${this.newAddress}"}`
+            console.log(formData)
+
+            updateEmailSetting(formData).then(res => {
+                console.log(res)
+                res = JSON.parse(res)
+                if (res['success'] === true) {
+                    this.$Notice.success({
+                        title: this.lanDisplay[this.languageType][this.name]['confirmModal']['success']['title'],
+                        desc: this.lanDisplay[this.languageType][this.name]['confirmModal']['success']['desc']
+                    })
+                } else {
+                    this.$Notice.error({
+                        title: this.lanDisplay[this.languageType]['confirmModal']['errors']['failToUpdate']['title'],
+                        desc: this.lanDisplay[this.languageType]['confirmModal']['errors']['failToUpdate']['desc']
+                    })
+                }
+            }).catch(err => {
+                console.error(err)
+                this.$Notice.error({
+                    title: 'Fail',
+                    desc: 'Fail'
+                })
+            })
+        },
+        cancel () {
+            this.isUpdate = false
+        }
     },
     created () {
         getEmailSetting().then(res => {
@@ -76,8 +120,8 @@ export default {
             })
         })
 
-        this.lanDisplay = lan
         this.languageType = this.$route.params.lan
+        this.lanDisplay = lan
     },
     mounted () {
         // Adaptation
