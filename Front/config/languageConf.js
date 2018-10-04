@@ -15,6 +15,22 @@ var lan = {
             port: 'Port',
             changeTitle: 'Upadte Configuration',
             sbButton: 'Submit',
+            confirmModal: {
+                title: 'WARNING',
+                content: 'Are u true to update the setting?',
+                okText: 'OK',
+                cancelText: 'CANCEL',
+                success: {
+                    title: 'Success',
+                    desc: 'Success to update email setting'
+                },
+                errors: {
+                    failToUpdate: {
+                        title: 'Sorry',
+                        desc: 'Fail to update email setting'
+                    }
+                }
+            },
             errors: {
                 failToGet: {
                     title: 'Sorry',
@@ -38,12 +54,28 @@ var lan = {
             address: '地址',
             port: '端口',
             changeTitle: '更新配置',
-            sbButton: '提交'
-        },
-        errors: {
-            failToGet: {
-                title: '出错了',
-                desc: '获取配置失败'
+            sbButton: '提交',
+            confirmModal: {
+                title: '警告',
+                content: '确认提交修改？',
+                okText: '确定',
+                cancelText: '取消',
+                success: {
+                    title: '成功',
+                    desc: '成功更新邮件IP'
+                },
+                errors: {
+                    failToUpdate: {
+                        title: '出错了',
+                        desc: '更新邮件IP失败'
+                    }
+                }
+            },
+            errors: {
+                failToGet: {
+                    title: '出错了',
+                    desc: '获取配置失败'
+                }
             }
         }
     }

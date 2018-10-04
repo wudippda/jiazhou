@@ -6,8 +6,11 @@ var register = (email, name, pwd) => fetch('POST', 'users/create', { email: emai
 
 var getEmailSetting = () => fetch('GET', 'email_setting/get_setting', {})
 
+var updateEmailSetting = (options) => fetch('POST', 'email_setting/update_setting', { options: options }, 'upload')
+
 export {
     login,
     register,
-    getEmailSetting
+    getEmailSetting,
+    updateEmailSetting
 }
