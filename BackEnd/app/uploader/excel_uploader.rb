@@ -6,6 +6,10 @@ class ExcelUploader < CarrierWave::Uploader::Base
     %w(xlsx xls csv)
   end
 
+  def sha256
+    Digest::SHA256.hexdigest(model.send(mounted_as).read.to_s)
+  end
+
   def store_dir
     Rails.root.join("public/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}")
   end

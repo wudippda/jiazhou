@@ -256,6 +256,7 @@ class ReportController < ApplicationController
   def upload_report
     report = ExcelReport.new
     report.excel = (params[UPLOAD_EXCEL_PARAM_KEY])
+    report.parsed = false
     report.save!
     Rails.logger.debug(report.excel.current_path)
     Rails.logger.debug(report.excel.url)
