@@ -256,7 +256,10 @@ class ReportController < ApplicationController
   def upload_report
     report = ExcelReport.new
     report.excel = (params[UPLOAD_EXCEL_PARAM_KEY])
-    render json: {uploadRes: report.excel.nil?}
+    report.save!
+    Rails.logger.debug(report.excel.current_path)
+    Rails.logger.debug(report.excel.url)
+    render json: {uploadRes: !report.excel.file.nil?}
   end
 
   # private methods
