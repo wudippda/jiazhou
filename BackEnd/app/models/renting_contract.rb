@@ -1,6 +1,5 @@
 class RentingContract < ApplicationRecord
   belongs_to :user
   belongs_to :tenant
-
-  has_one :property
+  belongs_to :property, optional: true
 end
