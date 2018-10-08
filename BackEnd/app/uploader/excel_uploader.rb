@@ -6,16 +6,18 @@ class ExcelUploader < CarrierWave::Uploader::Base
     %w(xlsx xls csv)
   end
 
-  def sha256
-    Digest::SHA256.hexdigest(model.send(mounted_as).read.to_s)
-  end
-
   def store_dir
     Rails.root.join("public/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}")
   end
 
   def filename
     "#{secure_token}.#{file.extension}" if original_filename.present?
+  end
+
+  before :cache, :save_original_filename
+
+  def save_original_filename(file)
+    model.original_filename ||= file.original_filename if file.respond_to?(:original_filename)
   end
 
   protected

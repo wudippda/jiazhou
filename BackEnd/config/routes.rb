@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
 
+  # Report route
   get 'report/index'
   post 'report/send_email' => "report#send_email"
   get 'report/parse_report' => "report#parse_report"
   get 'report/find_expenses' => "report#find_expenses"
-  post 'report/upload_report' => "report#upload_report"
+
+  # Excel report route
+  post 'excel_report/upload_report' => "excel_report#upload_report"
+  get 'excel_report/delete_report/:id' => "excel_report#delete_report"
+  get 'excel_report/list_report' => "excel_report#list_report"
 
   get 'email_setting/get_setting' => "email_setting#get_email_setting"
   post 'email_setting/update_setting' => "email_setting#update_email_setting"

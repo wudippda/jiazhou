@@ -19,7 +19,6 @@ class ReportController < ApplicationController
   MONYH_INCOME_PROPERTY_ADDRESS_ANCHOR = 'Property Address:'.downcase
   EXPENSE_OUTGOING_START_ANCHOR = 'Expenses'.downcase
   EXPENSE_OUTGOING_STOP_ANCHOR = 'Total Expenses'.downcase
-  UPLOAD_EXCEL_PARAM_KEY = 'upload'
 
   # public apis
   def index
@@ -250,17 +249,6 @@ class ReportController < ApplicationController
     parse_monthly_report(monthlySheetData)
 
     render json: {parseRes: parseSuccess}
-  end
-
-
-  def upload_report
-    report = ExcelReport.new
-    report.excel = (params[UPLOAD_EXCEL_PARAM_KEY])
-    report.parsed = false
-    report.save!
-    Rails.logger.debug(report.excel.current_path)
-    Rails.logger.debug(report.excel.url)
-    render json: {uploadRes: !report.excel.file.nil?}
   end
 
   # private methods
