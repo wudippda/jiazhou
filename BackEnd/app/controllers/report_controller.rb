@@ -21,10 +21,6 @@ class ReportController < ApplicationController
   EXPENSE_OUTGOING_STOP_ANCHOR = 'Total Expenses'.downcase
 
   # public apis
-  def index
-    #UserMailer.with(receiver: User.new(id: 1, first_name:"Francis", last_name:"Zhong", email: "francis.zhong@sap.com")).incoming_email.deliver_now
-  end
-
   def find_expenses
     res = nil
     User.find_by(id: 1).properties.each do |property|
@@ -239,14 +235,20 @@ class ReportController < ApplicationController
 
   def parse_report
     parseSuccess = false
+    excelReport = ExcelReport.find_by(id: params[:id])
 
-    workbook = RubyXL::Parser.parse("/Users/i320107/Desktop/report_sample.xlsx")
-    # Read customer worksheet
-    customerSheetData = workbook.worksheets[0].sheet_data
-    monthlySheetData = workbook.worksheets[1].sheet_data
+    if excelReport && excelReport.excel.file
+      workbook = RubyXL::Parser.parse(excelReport.excel.current_path)
+      # Read customer worksheet
+      customerSheetData = workbook.worksheets[0].sheet_data
+      monthlySheetData = workbook.worksheets[1].sheet_data
 
-    parse_customer_list(customerSheetData)
-    parse_monthly_report(monthlySheetData)
+      parse_customer_list(customerSheetData)
+      parse_monthly_report(monthlySheetData)
+
+      # if parsing process succeed
+      excelReport.update_attributes(parsed: true)
+    end
 
     render json: {parseRes: parseSuccess}
   end

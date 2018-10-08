@@ -60,3 +60,6 @@ gem 'rubyXL'
 gem 'carrierwave'
 gem 'will_paginate'
 gem 'whenever', require: false
+gem 'jwt'
+gem 'simple_command'
+gem 'bcrypt'

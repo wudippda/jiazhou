@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get 'excel_report/delete_report/:id' => "excel_report#delete_report"
   get 'excel_report/list_report' => "excel_report#list_report"
 
+  # Authentication route
+  get 'authentication' => "authentication#authenticate"
+
   get 'email_setting/get_setting' => "email_setting#get_email_setting"
   post 'email_setting/update_setting' => "email_setting#update_email_setting"
 

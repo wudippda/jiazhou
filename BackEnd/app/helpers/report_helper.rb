@@ -6,5 +6,4 @@ module ReportHelper
     rescure StandardError => e
     Rails.logger.error("Error occured when cleaning cache file! Message: #{e.message}")
   end
-
 end
