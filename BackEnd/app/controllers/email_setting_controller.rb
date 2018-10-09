@@ -1,5 +1,5 @@
 class EmailSettingController < ApplicationController
-  PERMITTED_SETTING_PARAMS = %w(address port openssl_verify_mode enable_starttls_auto).map(&:to_sym)
+  PERMITTED_SETTING_PARAMS = %w(domain user_name password address port openssl_verify_mode enable_starttls_auto).map(&:to_sym)
 
   def get_email_setting
     @email_setting = EmailSettingHelper.get_email_setting(Rails.env)

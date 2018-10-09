@@ -1,0 +1,23 @@
+<container>
+  <row class="header">
+    <columns>
+      <spacer size="16"></spacer>
+
+      <h4 class="text-center">
+        HAHAHA
+      </h4>
+    </columns>
+  </row>
+  <row>
+    <%= image_tag("https://image-charts.com/chart?chs=300x190&chd=t:60,40&cht=p3&chl=Hello%7CWorld&chan") %>
+    <table>
+      <% @receiver.properties.each do |property|%>
+        <tr>
+          <td><%= @receiver.tenants.first.tenant_name %></td>
+          <td><%= property.address + " " + property.lot %></td>
+        </tr>
+      <% end %>
+    </table>
+  </row>
+  <spacer size="16"></spacer>
+</container>

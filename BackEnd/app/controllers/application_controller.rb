@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
   skip_before_action :verify_authenticity_token, raise: false
-  include ActionController::MimeResponds
+  #include ActionController::MimeResponds
 
   # before_action :authenticate_request
   # attr_reader :current_user

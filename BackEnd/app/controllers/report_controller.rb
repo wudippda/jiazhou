@@ -39,17 +39,15 @@ class ReportController < ApplicationController
   end
 
   def send_report
-    @user = User.find(params[:user_id])
-    @reportType = params[:report_type]
+    @user = User.find(params[:id])
+    @reportType = params[:report_type] || "full"
 
     if @user
-      @report = generate_report(@user, @report_type)
-      UserMailer.with(receiver: @user, report: @report).incoming_email.deliver_now
+      #@report = generate_report(@user, @report_type)
+      UserMailer.with(receiver: @user).incoming_email.deliver_now
     end
 
-    respond_to do |format|
-      format.html { render 'index.html.erb'}
-    end
+    render json: {res: true}
   end
 
   def parse_customer_list(customerSheetData)
@@ -237,7 +235,7 @@ class ReportController < ApplicationController
     parseSuccess = false
     excelReport = ExcelReport.find_by(id: params[:id])
 
-    if excelReport && excelReport.excel.file
+    if excelReport && !excelReport.parsed && excelReport.excel.file
       workbook = RubyXL::Parser.parse(excelReport.excel.current_path)
       # Read customer worksheet
       customerSheetData = workbook.worksheets[0].sheet_data
@@ -248,6 +246,7 @@ class ReportController < ApplicationController
 
       # if parsing process succeed
       excelReport.update_attributes(parsed: true)
+      parseSuccess = true
     end
 
     render json: {parseRes: parseSuccess}

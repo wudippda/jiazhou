@@ -1,7 +1,7 @@
 class ExcelReportController < ApplicationController
 
   UPLOAD_EXCEL_PARAM_KEY = 'upload'
-  SHOW_KEYS = %w(id digest original_filename parsed excel)
+  SHOW_KEYS = %w(id digest original_filename parsed excel created_at)
 
   def upload_report
     uploadSuccess = false

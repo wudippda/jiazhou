@@ -1,6 +1,6 @@
 class UserMailer < ApplicationMailer
 
-  DEFAULT_SUBJECT = "Incoming Report for"
+  DEFAULT_SUBJECT = "Monthly Incoming & Expense Report for"
 
   # Mail configuration
   before_action { @receiver, @report = params[:receiver], params[:report] }
@@ -11,14 +11,14 @@ class UserMailer < ApplicationMailer
   end
 
   def generate_subject
-    return "[] #{DEFAULT_SUBJECT} #{@receiver.first_name.capitalize} #{@receiver.last_name.capitalize}"
+    return "[NOTIFICATION] #{DEFAULT_SUBJECT} #{@receiver.name.capitalize}"
   end
 
   def set_email_configuration
     @email_settings = EmailSettingHelper.get_email_setting(Rails.env)
     Rails.logger.debug(@email_settings.symbolize_keys)
     mail.delivery_method.settings.merge!(@email_settings.symbolize_keys)
-    Rails.logger.info(mail.delivery_method.settings)
+    Rails.logger.debug(mail.delivery_method.settings)
   end
 
 end

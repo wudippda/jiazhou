@@ -2,13 +2,14 @@ Rails.application.routes.draw do
 
   # Report route
   get 'report/index'
-  post 'report/send_email' => "report#send_email"
-  get 'report/parse_report' => "report#parse_report"
+  #post 'report/send_email' => "report#send_email"
+  get 'report/parse_report/:id' => "report#parse_report"
   get 'report/find_expenses' => "report#find_expenses"
+  get 'report/send_report/:id' => 'report#send_report'
 
   # Excel report route
   post 'excel_report/upload_report' => "excel_report#upload_report"
-  get 'excel_report/delete_report/:id' => "excel_report#delete_report"
+  post 'excel_report/delete_report' => "excel_report#delete_report"
   get 'excel_report/list_report' => "excel_report#list_report"
 
   # Authentication route
