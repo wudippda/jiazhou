@@ -77,7 +77,7 @@ export default {
                 console.error(err)
                 this.$Notice.error({
                     title: this.lanDisplay[this.languageType][this.name]['errors']['failToUpload']['title'],
-                    desc: this.lanDisplay[this.languageType][this.name]['errors']['failToUpload']['desc'] + err.toString()
+                    desc: this.lanDisplay[this.languageType][this.name]['errors']['failToUpload']['desc']
                 })
                 this.isUploading = false
             })
