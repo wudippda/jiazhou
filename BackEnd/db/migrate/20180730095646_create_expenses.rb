@@ -2,11 +2,14 @@ class CreateExpenses < ActiveRecord::Migration[5.1]
   def change
     create_table :expenses do |t|
       t.boolean :is_cost
-      t.string :date
-      t.string :type
+      t.decimal :cost, :precision => 2
+      t.datetime :date
+      t.string :category
       t.text :comment
       t.belongs_to :property, index: true
       t.timestamps
+
+      #t.index [:property_id, :date, :type, :is_cost], :unique => true
     end
   end
 end
