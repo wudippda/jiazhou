@@ -2,7 +2,7 @@ class ExcelUploader < CarrierWave::Uploader::Base
   storage :file
   #permissions 0666
 
-  def extension_white_list
+  def extension_whitelist
     %w(xlsx xls csv)
   end
 

@@ -3,13 +3,11 @@ class EmailSettingController < ApplicationController
 
   def get_email_setting
     @email_setting = EmailSettingHelper.get_email_setting(Rails.env)
-    respond_to do |format|
-      format.all { render json: @email_setting.as_json}
-    end
+    render json: @email_setting.as_json
   end
 
   def update_email_setting
-    success = true
+    updateSuccess = true
     env = Rails.env
     # Need to take care if the input json is malicious
     @options = JSON.parse(params.require(:options))
@@ -23,11 +21,8 @@ class EmailSettingController < ApplicationController
     rescue StandardError => error
       Rails.logger.error("Error occurs when opening email setting file! Error message:" + error.message)
       Rails.logger.debug(error.backtrace)
-      success = false
+      updateSuccess = false
     end
-
-    respond_to do |format|
-      format.all { render json: { success: success }}
-    end
+    render json: { success: updateSuccess }
   end
 end

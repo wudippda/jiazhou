@@ -5,15 +5,18 @@ class ExcelReportController < ApplicationController
 
   def upload_report
     uploadSuccess = false
+    responseJson = {}
     report = ExcelReport.new(excel: params[UPLOAD_EXCEL_PARAM_KEY], parsed: false)
     begin
       report.save!
       uploadSuccess = true
     rescue ActiveRecord::RecordInvalid => e
       uploadSuccess = false
+      responseJson['errorMsg'] = e.message
       Rails.logger.error(e.message)
     ensure
-      render json: {uploadSuccess: uploadSuccess}
+      responseJson['uploadSuccess'] = uploadSuccess
+      render json: responseJson
     end
   end
 
