@@ -5,11 +5,13 @@ var lan = {
         },
         SiderBar: {
             dashboardPage: 'Dashboard',
+            parsingPage: 'Parsing',
             housePage: 'Houses',
             emailSettingPage: 'Email',
-            logOut: 'logout'
+            logOut: 'Logout'
         },
         EmailSettingPage: {
+            title: 'Email Setting',
             panelTitle: 'Basic Configuration',
             address: 'Address',
             port: 'Port',
@@ -37,6 +39,22 @@ var lan = {
                     desc: 'Fail to get email setting from server'
                 }
             }
+        },
+        ParsingPage: {
+            title: 'Parsing Center',
+            upload: 'Upload Excel File',
+            success: {
+                successToUpload: {
+                    title: 'Success',
+                    desc: 'Success to upload your file!'
+                }
+            },
+            errors: {
+                failToUpload: {
+                    title: 'Sorry',
+                    desc: 'Fail to upload your excel file, error msg: '
+                }
+            }
         }
     },
     CN: {
@@ -45,11 +63,13 @@ var lan = {
         },
         SiderBar: {
             dashboardPage: '展示面板',
+            parsingPage: '解析中心',
             housePage: '房屋信息',
             emailSettingPage: '邮件配置',
             logOut: '登出'
         },
         EmailSettingPage: {
+            title: '邮件配置',
             panelTitle: '配置基本信息',
             address: '地址',
             port: '端口',
@@ -77,7 +97,23 @@ var lan = {
                     desc: '获取配置失败'
                 }
             }
-        }
+        },
+        ParsingPage: {
+            title: '解析中心',
+            upload: '上传Excel文件',
+            success: {
+                successToUpload: {
+                    title: '成功',
+                    desc: '成功上传!'
+                }
+            },
+            errors: {
+                failToUpload: {
+                    title: '出错了',
+                    desc: '上传出错，错误信息: '
+                }
+            }
+        },
     }
 }
 
