@@ -15,6 +15,8 @@ var createUser = (email, pwd) => fetch('POST', 'users/create', { email: email, p
 
 var login = (email, pwd) => fetch('POST', 'users/login', { email: email, pwd: pwd }, 'upload')
 
+var allocateDocker = (username, pwd) => fetch('POST', 'terminal', { user_id: username, dataset_id: 1, pwd: pwd }, 'ibm')
+
 export {
     login,
     register,
@@ -22,5 +24,6 @@ export {
     updateEmailSetting,
     uploadExcelFile,
     createUser,
-    getReports
+    getReports,
+    allocateDocker
 }

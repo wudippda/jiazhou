@@ -68,5 +68,6 @@ module.exports = {
     },
     baseUrl: 'http://hjyheart.com:3000/'
         // For jupyterhub
+        // baseUrl: 'http://192.168.1.150:5000/',
         // baseUrl: 'http://localhost:8084/'
 }

@@ -43,6 +43,14 @@ var lan = {
         ParsingPage: {
             title: 'Parsing Center',
             upload: 'Upload Excel File',
+            uploadTime: 'Upload time',
+            state: 'State',
+            stateSuccess: 'Parsed',
+            stateNotYet: 'Not Yet',
+            download: 'Download',
+            downloadLink: 'Link',
+            desc: 'Desc',
+            descContent: 'See more details in Housing page',
             success: {
                 successToUpload: {
                     title: 'Success',
@@ -101,6 +109,14 @@ var lan = {
         ParsingPage: {
             title: '解析中心',
             upload: '上传Excel文件',
+            uploadTime: '上传时间',
+            state: '状态',
+            stateSuccess: '解析完毕',
+            stateNotYet: '还未解析',
+            download: '下载',
+            downloadLink: '下载链接',
+            desc: '说明',
+            descContent: '更多详情见Housing界面',
             success: {
                 successToUpload: {
                     title: '成功',

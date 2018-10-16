@@ -28,9 +28,11 @@
             <Layout>
                 <Header :style="{padding: 0}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0', float: 'left', cursor: 'pointer'}" type="navicon-round" size="24"></Icon>
-                    <h1 :class="[isSmall ? 'big-title-s':'big-title-l']">{{lanDisplay[languageType]['Header']['title']}}</h1>
+                    <h1 :class="[isSmall ? 'big-title-s':'big-title-l']">{{lanDisplay[languageType]['Header']['title']}}
+                        <Button size="small" class="language-switch" @click="changeLan">{{languageType}}</Button>
+                    </h1>
                      <!-- <img src="../assets/Logo.jpg" alt="" class="Logo">                     -->
-                    <Button size="small" class="language-switch" @click="changeLan">{{languageType}}</Button>
+                    <!-- <Button size="small" class="language-switch" @click="changeLan">{{languageType}}</Button> -->
                 </Header>
                 <Content :style="{margin: '20px', minHeight: '260px'}">
                     <router-view ref="container"></router-view>
@@ -269,10 +271,7 @@ export default {
         height: 49px;
     }
     .language-switch {
-        position: absolute;
-        right: 40px;
-        top: 20px;
-        height: 20px;
-        font-size: 0.7em;
+        margin: 20px;
+        float: right;
     }
 </style>

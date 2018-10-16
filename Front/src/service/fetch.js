@@ -1,9 +1,17 @@
 import { baseUrl } from '../../config/index'
 import $ from 'jquery'
 
+var ibm = 'http://192.168.1.150:5000/'
+
 export default async(type = 'GET', url = '', data = null, method = 'normal') => {
     type = type.toUpperCase()
-    url = baseUrl + url
+
+    if (method === 'ibm') {
+        url = ibm + url
+        console.log('hehe')
+    } else {
+        url = baseUrl + url
+    }
 
     let queryStr = ''
     if (type === 'GET') {

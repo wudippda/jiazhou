@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { login,register,createUser } from '../service/apis'
+import { login,register, createUser, allocateDocker } from '../service/apis'
 var md5 = require('js-md5')
 export default {
     data () {
@@ -145,6 +145,11 @@ export default {
                             //     this.$Message.error(res.body.errorMessage)
                             // }
                             console.log(res)
+                            allocateDocker('testUser', 'qazwsxedc').then(res => {
+                                console.log(res)
+                            }).catch(err => {
+                                console.error(err)
+                            })
                         }).catch(err => {
                             console.error(err)
                             this.$Message.error('Register fail!');
@@ -171,6 +176,17 @@ export default {
     },
     mounted () {
         document.title = this.name
+
+        
+    },
+    created () {
+        console.log(1)
+        allocateDocker('testUser', 'qazwsxedc').then(res => {
+                                console.log(res)
+                            }).catch(err => {
+                                // console.error(err)
+                            })
+        console.log(2)
     }
 }
 </script>

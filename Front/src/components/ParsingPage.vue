@@ -13,30 +13,34 @@
         <Row type="flex" justify="center">
             <Col span="24">
                 <Card class="for-card"  v-for="(item, index) in reports" :key="index">
-                    <p slot="title">
+                    <p slot="title" style="text-align:center">
                         <Icon type="gear-b"></Icon>
                         {{item.original_filename}}
                     </p>
 
-                    <Row type="flex" justify="start">
-                        <Col span="19" class="card-info">
-                            <div>
-                                <span>上传时间:</span> &nbsp;{{item.created_at}}
-                            </div>
-                            <div>
-                                <span>状态:</span> &nbsp;<Button :type="item.parsed ? 'success':'error'"></Button>
-                            </div>
-                        </Col>
-                        <Col span="4">
+                    <Row type="flex" justify="start" class="card-info">
+                        <Col span="19">
+                            <p>{{lanDisplay[languageType][name]['uploadTime']}}:<span>&nbsp;{{item.created_at}}</span></p>
+                            <br>
+                            <p>{{lanDisplay[languageType][name]['state']}}: 
+                                <Button shape="circle" size="small" type="error" v-if="!item.parsed">{{lanDisplay[languageType][name]['stateNotYet']}}</Button>
+                                <Button shape="circle" size="small" type="success" v-if="item.parsed">{{lanDisplay[languageType][name]['stateSuccess']}}</Button>
+                            </p>
+                            <br>
+                            <p>{{lanDisplay[languageType][name]['download']}}: <a style="font-size: 0.9em" :href="serverUrl + item.excel.url">{{lanDisplay[languageType][name]['downloadLink']}}</a></p>
+                            <br>
+                            <p>{{lanDisplay[languageType][name]['desc']}}: <span style="font-size: 0.9em">{{lanDisplay[languageType][name]['descContent']}}</span></p>
                         </Col>
                     </Row>
 
-                    <a href="#" slot="extra" @click.prevent="changeLimit">
-                        <Icon type="ios-loop-strong"></Icon>
+                    <a href="#" slot="extra" @click.prevent="deleteParse">
+                        <Icon type="ios-close-outline"></Icon>
                     </a>
                 </Card>
             </Col>
         </Row>
+        <Page :total="totalPage * 5" size="small" :current="currentPage" page-size="5" @on-change="changePage"></Page>
+        <br><br>
     </div>
 </template>
 
@@ -44,6 +48,7 @@
 
 import { lan } from '../../config/languageConf.js'
 import { uploadExcelFile, getReports } from '../service/apis'
+import { baseUrl } from '../../config/index'
 
 import $ from 'jquery'
 
@@ -58,10 +63,23 @@ export default {
             isSmall: false,
             testFile: null,
             isUploading: false,
-            reports: []
+            reports: [],
+            serverUrl: '',
+            currentPage: 1,
+            totalPage: 1
         }
     },
     methods: {
+        changePage (page) {
+            this.currentPage = page
+            this.initData(page)
+        },
+        deleteParse () {
+            this.$Notice.success({
+                title: 'Delete',
+                desc: 'Delete'
+            })
+        },
         startUpload () {
             $('#excel').click()
             $('#excel').change(() => {
@@ -80,6 +98,7 @@ export default {
                         title: this.lanDisplay[this.languageType][this.name]['success']['successToUpload']['title'],
                         desc: this.lanDisplay[this.languageType][this.name]['success']['successToUpload']['desc']
                     })
+                    this.initData(1)
                 } else {
                     this.$Notice.error({
                         title: this.lanDisplay[this.languageType][this.name]['errors']['failToUpload']['title'],
@@ -95,18 +114,24 @@ export default {
                 })
                 this.isUploading = false
             })
+        },
+        async initData (page) {
+            getReports(page).then(res => {
+                console.log(res)
+                this.reports = res.reports
+                this.currentPage = Number.parseInt(res.currentPage)
+                this.totalPage = res.totalPage
+            }).catch(err => {
+                console.error(err)
+            })
         }
     },
     created () {
         this.languageType = this.$route.params.lan
         this.lanDisplay = lan
+        this.serverUrl = baseUrl
 
-        getReports(1).then(res => {
-            console.log(res)
-            this.reports = res.reports
-        }).catch(err => {
-            console.error(err)
-        })
+        this.initData(1)
     },
     mounted () {
         // Change title name
@@ -151,10 +176,14 @@ export default {
         width: 100%;
         margin-bottom: 20px;
     }
-    .for-card span {
+    .for-card p {
         font-size: 1.1em;
         color: #1c2438;
         font-weight: 700;
+        text-align: left;
+    }
+    .card-info {
+        margin: 15px;
     }
     .card-info div {
         float: left;
