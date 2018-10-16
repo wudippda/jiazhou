@@ -1,7 +1,7 @@
 class ExcelReport < ApplicationRecord
   validates_uniqueness_of :digest
   mount_uploader :excel, ExcelUploader
-  self.per_page = 10
+  self.per_page = 5
 
   before_save :update_digest
 

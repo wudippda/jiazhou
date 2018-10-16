@@ -20,5 +20,4 @@ class UserMailer < ApplicationMailer
     mail.delivery_method.settings.merge!(@email_settings.symbolize_keys)
     Rails.logger.debug(mail.delivery_method.settings)
   end
-
 end

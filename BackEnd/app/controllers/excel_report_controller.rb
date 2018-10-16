@@ -1,7 +1,7 @@
 class ExcelReportController < ApplicationController
 
   UPLOAD_EXCEL_PARAM_KEY = 'upload'
-  SHOW_KEYS = %w(id digest original_filename parsed excel created_at)
+  LIST_REPORT_SHOW_KEYS = %w(id digest original_filename parsed excel created_at)
 
   def upload_report
     uploadSuccess = false
@@ -38,7 +38,7 @@ class ExcelReportController < ApplicationController
   end
 
   def list_report
-    results =  ExcelReport.select(SHOW_KEYS).page(params[:page])
+    results =  ExcelReport.select(LIST_REPORT_SHOW_KEYS).page(params[:page])
     render json: {reports: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
   end
 end
