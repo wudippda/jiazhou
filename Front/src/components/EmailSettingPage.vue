@@ -113,16 +113,16 @@ export default {
         }
     },
     created () {
-        // getEmailSetting().then(res => {
-        //     console.log('emailSetting', res)
-        //     this.emailSetting = JSON.parse(res)
-        // }).catch(err => {
-        //     console.error(err)
-        //     this.$Notice.error({
-        //         title: this.lanDisplay[languageType]['errors']['failToGet']['title'],
-        //         desc: this.lanDisplay[languageType]['errors']['failToGet']['desc']
-        //     })
-        // })
+        getEmailSetting().then(res => {
+            console.log('emailSetting', res)
+            this.emailSetting = res
+        }).catch(err => {
+            console.error(err)
+            this.$Notice.error({
+                title: this.lanDisplay[languageType]['errors']['failToGet']['title'],
+                desc: this.lanDisplay[languageType]['errors']['failToGet']['desc']
+            })
+        })
 
         this.languageType = this.$route.params.lan
         this.lanDisplay = lan
@@ -159,8 +159,9 @@ export default {
 
 <style scoped>
     .email-container {
-        width: 100%;
+        width: 90%;
         height: 100%;
+        margin: 0 auto;
     }
     .left {
         float: left

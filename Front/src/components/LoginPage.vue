@@ -3,8 +3,8 @@
       <transition name="slide-fade">
         <Card class="login-card" v-if="mode === 'Login'">
             <div>
-                <img src="../assets/logo.svg" class="logo">
-                <h1 style="font-size: 1.2em; color: white">Title</h1>
+                <!-- <img src="../assets/logo.svg" class="logo"> -->
+                <h1 style="font-size: 1.2em; color: white">数据平台登录</h1>
                 <Form ref="loginFormValidation" :model="loginFormValidation" :rules="loginRuleValidation">
                     <FormItem prop="email" class="form-item">
                         <Input type="text" v-model="loginFormValidation.email" placeholder="Email">
@@ -17,10 +17,10 @@
                         </Input>
                     </FormItem>
                     <FormItem>
-                        <Button type="success" size="large" @click="handleSubmit('loginFormValidation')">Signin</Button>
+                        <Button type="success" size="large" @click="handleSubmit('loginFormValidation')">登录</Button>
                     </FormItem>
                     <FormItem>
-                        <a class="register-tip" @click="swithMode('Register')">Register</a>
+                        <a class="register-tip" @click="swithMode('Register')">注册</a>
                     </FormItem>
                 </Form>
             </div>
@@ -29,18 +29,18 @@
     <transition name="slide-fade">
         <Card class="login-card" v-if="mode === 'Register'">
             <div>
-                <img src="../assets/logo.svg" class="logo">
+                <!-- <img src="../assets/logo.svg" class="logo"> -->
                 <Form ref="registerFormValidation" :model="registerFormValidation" :rules="registerRuleValidation">
                     <FormItem prop="email" class="form-item">
                         <Input type="text" v-model="registerFormValidation.email" placeholder="Email">
                             <Icon type="ios-email-outline" slot="prepend"></Icon>
                         </Input>
                     </FormItem>
-                    <FormItem prop="name" class="form-item">
+                    <!-- <FormItem prop="name" class="form-item">
                         <Input type="text" v-model="registerFormValidation.name" placeholder="Name">
                             <Icon type="ios-person-outline" slot="prepend"></Icon>
                         </Input>
-                    </FormItem>
+                    </FormItem> -->
                     <FormItem prop="pwd" class="form-item">
                         <Input type="password" v-model="registerFormValidation.pwd" placeholder="Password">
                             <Icon type="ios-locked-outline" slot="prepend"></Icon>
@@ -52,10 +52,10 @@
                         </Input>
                     </FormItem>
                     <FormItem>
-                        <Button type="info" size="large" @click="handleSubmit('registerFormValidation')">Register</Button>
+                        <Button type="info" size="large" @click="handleSubmit('registerFormValidation')">注册</Button>
                     </FormItem>
                     <FormItem>
-                        <a class="register-tip" @click="swithMode('Login')">Login</a>
+                        <a class="register-tip" @click="swithMode('Login')">登录</a>
                     </FormItem>
                 </Form>
             </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { login,register } from '../service/apis'
+import { login,register,createUser } from '../service/apis'
 var md5 = require('js-md5')
 export default {
     data () {
@@ -92,9 +92,9 @@ export default {
                 pwdcf: ''
             },
             registerRuleValidation: {
-                name: [
-                    { required: true, type: 'string', message: 'Please input your username', trigger: 'blur'}
-                ],
+                // name: [
+                //     { required: true, type: 'string', message: 'Please input your username', trigger: 'blur'}
+                // ],
                 email: [
                     { required: true, type: 'email', message: 'Please fill in the correct email', trigger: 'blur' }
                 ],
@@ -118,15 +118,16 @@ export default {
                 if (valid) {
                     if (this.mode === 'Login') {
                         login(this.loginFormValidation.email, this.loginFormValidation.password).then(res => {
-                            if (res.statusCode === 'ACCEPTED') {
-                                this.$Message.success('Login success!')
-                                this.$session.start()
-                                this.$session.set('Auth', md5(res.body.userId.toString()))
-                                this.$session.set('UserId', res.body.userId)
-                                this.$router.push({name: 'dashboard', params: {userId: res.body.userId}})
-                            } else {
-                                this.$Message.error(res.body.errorMessage)
-                            }
+                            // if (res.statusCode === 'ACCEPTED') {
+                            //     this.$Message.success('Login success!')
+                            //     this.$session.start()
+                            //     this.$session.set('Auth', md5(res.body.userId.toString()))
+                            //     this.$session.set('UserId', res.body.userId)
+                            //     this.$router.push({name: 'dashboard', params: {userId: res.body.userId}})
+                            // } else {
+                            //     this.$Message.error(res.body.errorMessage)
+                            // }
+                            console.log(res)
                         }).catch(err => {
                             console.error(err)
                             this.$Message.error('Login fail!')
@@ -136,13 +137,14 @@ export default {
                             this.registerFormValidation.pwdcf = ''
                             this.$Message.warning('Please input yoour password again')
                         }
-                        register(this.registerFormValidation.email, this.registerFormValidation.name, this.registerFormValidation.pwd).then(res => {
-                            if (res.statusCode === 'ACCEPTED') {
-                                this.$Message.success('Register success!')
-                                this.swithMode('Login')
-                            } else {
-                                this.$Message.error(res.body.errorMessage)
-                            }
+                        createUser(this.registerFormValidation.email, this.registerFormValidation.pwd).then(res => {
+                            // if (res.statusCode === 'ACCEPTED') {
+                            //     this.$Message.success('Register success!')
+                            //     this.swithMode('Login')
+                            // } else {
+                            //     this.$Message.error(res.body.errorMessage)
+                            // }
+                            console.log(res)
                         }).catch(err => {
                             console.error(err)
                             this.$Message.error('Register fail!');

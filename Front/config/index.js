@@ -67,4 +67,6 @@ module.exports = {
         bundleAnalyzerReport: process.env.npm_config_report
     },
     baseUrl: 'http://hjyheart.com:3000/'
+        // For jupyterhub
+        // baseUrl: 'http://localhost:8084/'
 }
