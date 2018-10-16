@@ -5,6 +5,8 @@ class CreateExcelReports < ActiveRecord::Migration[5.1]
       t.string :original_filename
       t.string :digest
       t.boolean :parsed
+      t.string :parse_status
+      t.string :parse_message
       t.timestamps
 
       t.index [:digest], :unique => true
