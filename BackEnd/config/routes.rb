@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   # Authentication route
   get 'authentication' => "authentication#authenticate"
 
+  # Detail list route
+  get 'detail_list/list_user' => "detail_list#list_user"
+  get 'detail_list/find' => "detail_list#find_property_and_tenant_by_user"
+
   get 'email_setting/get_setting' => "email_setting#get_email_setting"
   post 'email_setting/update_setting' => "email_setting#update_email_setting"
 
