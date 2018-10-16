@@ -8,9 +8,12 @@ var getEmailSetting = () => fetch('GET', 'email_setting/get_setting', {})
 
 var updateEmailSetting = (options) => fetch('POST', 'email_setting/update_setting', { options: options }, 'upload')
 
+var uploadExcelFile = (file) => fetch('POST', 'excel_report/upload_report', { upload: file }, 'upload')
+
 export {
     login,
     register,
     getEmailSetting,
-    updateEmailSetting
+    updateEmailSetting,
+    uploadExcelFile
 }

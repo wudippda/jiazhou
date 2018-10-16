@@ -7,6 +7,10 @@
                         <Icon type="clipboard"></Icon>
                         <span>{{lanDisplay[languageType]['SiderBar']['dashboardPage']}}</span>
                     </MenuItem>
+                    <MenuItem name="parsingPage">
+                        <Icon type="play"></Icon>
+                        <span>{{lanDisplay[languageType]['SiderBar']['parsingPage']}}</span>
+                    </MenuItem>
                     <MenuItem name="housePage">
                         <Icon type="ios-home"></Icon>
                         <span>{{lanDisplay[languageType]['SiderBar']['housePage']}}</span>
@@ -97,6 +101,10 @@ export default {
                     this.activeName = 'emailSettingPage'
                     this.$router.push({name: 'emailSetting', params: {lan: this.languageType}})
                     break
+                case 'parsingPage':
+                    this.activeName = 'parsingPage'
+                    this.$router.push({name: 'parsingPage', params: {lan: this.languageType}})
+                    break
                 default:
                     break
             }
@@ -117,6 +125,10 @@ export default {
                 break
             case 'emailSetting':
                 this.activeName = 'emailSettingPage'
+                break
+            case 'parsingPage':
+                this.activeName = 'parsingPage'
+                break
             default:
                 break
         }
