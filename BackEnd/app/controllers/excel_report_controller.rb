@@ -38,6 +38,7 @@ class ExcelReportController < ApplicationController
   end
 
   def list_report
-    render json: {reports: ExcelReport.select(SHOW_KEYS).page(params[:page]).as_json}
+    results =  ExcelReport.select(SHOW_KEYS).page(params[:page])
+    render json: {reports: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
   end
 end
