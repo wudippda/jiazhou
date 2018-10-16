@@ -106,7 +106,8 @@ export default {
 
 <style scoped>
     .dashboard-container {
-        width: 100%;
+        margin: 0 auto;
+        width: 90%;
         height: 100%;
     }
 </style>

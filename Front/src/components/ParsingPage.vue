@@ -1,27 +1,40 @@
 <template>
     <div class="parsing-container">
-        <Breadcrumb class="left">
-            <BreadcrumbItem>{{lanDisplay[languageType][name]['title']}}</BreadcrumbItem>
-        </Breadcrumb>
+        <div style="height: 80px">
+            <Breadcrumb class="left">
+                <BreadcrumbItem>{{lanDisplay[languageType][name]['title']}}</BreadcrumbItem>
+            </Breadcrumb>
+            <br>
+            <br>
+            <Button class="left" type="success" icon="upload" shape="circle" size="large" :loading="isUploading" @click="startUpload">{{lanDisplay[languageType][name]['upload']}}</Button>
+            <input type="file" id="excel" style="display: none" accept="application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </div>
         <br>
-        <br>
-        <Button class="left" type="success" icon="upload" shape="circle" size="large" :loading="isUploading" @click="startUpload">{{lanDisplay[languageType][name]['upload']}}</Button>
-        <input type="file" id="excel" style="display: none" accept="application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         <Row type="flex" justify="center">
-            <Col span="20">
-                <!-- <Card style="width:350px">
-        <p slot="title">
-            <Icon type="ios-film-outline"></Icon>
-            Classic film
-        </p>
-        <a href="#" slot="extra" @click.prevent="changeLimit">
-            <Icon type="ios-loop-strong"></Icon>
-            Change
-        </a>
-        <ul>
-            
-        </ul>
-    </Card> -->
+            <Col span="24">
+                <Card class="for-card"  v-for="(item, index) in reports" :key="index">
+                    <p slot="title">
+                        <Icon type="gear-b"></Icon>
+                        {{item.original_filename}}
+                    </p>
+
+                    <Row type="flex" justify="start">
+                        <Col span="19" class="card-info">
+                            <div>
+                                <span>上传时间:</span> &nbsp;{{item.created_at}}
+                            </div>
+                            <div>
+                                <span>状态:</span> &nbsp;<Button :type="item.parsed ? 'success':'error'"></Button>
+                            </div>
+                        </Col>
+                        <Col span="4">
+                        </Col>
+                    </Row>
+
+                    <a href="#" slot="extra" @click.prevent="changeLimit">
+                        <Icon type="ios-loop-strong"></Icon>
+                    </a>
+                </Card>
             </Col>
         </Row>
     </div>
@@ -30,7 +43,7 @@
 <script>
 
 import { lan } from '../../config/languageConf.js'
-import { uploadExcelFile } from '../service/apis'
+import { uploadExcelFile, getReports } from '../service/apis'
 
 import $ from 'jquery'
 
@@ -44,7 +57,8 @@ export default {
             clientHeight: 0,
             isSmall: false,
             testFile: null,
-            isUploading: false
+            isUploading: false,
+            reports: []
         }
     },
     methods: {
@@ -86,6 +100,13 @@ export default {
     created () {
         this.languageType = this.$route.params.lan
         this.lanDisplay = lan
+
+        getReports(1).then(res => {
+            console.log(res)
+            this.reports = res.reports
+        }).catch(err => {
+            console.error(err)
+        })
     },
     mounted () {
         // Change title name
@@ -119,10 +140,24 @@ export default {
 
 <style scoped>
     .parsing-container {
-        width: 100%;
+        width: 90%;
         height: 100%;
+        margin: 0 auto;
     }
     .left {
         float: left
+    }
+    .for-card {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .for-card span {
+        font-size: 1.1em;
+        color: #1c2438;
+        font-weight: 700;
+    }
+    .card-info div {
+        float: left;
+        margin-bottom: 5px;
     }
 </style>
