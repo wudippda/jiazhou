@@ -1,9 +1,12 @@
-class ExcelUploader < CarrierWave::Uploader::Base
+class ReportUploader < CarrierWave::Uploader::Base
   storage :file
   #permissions 0666
 
+  ARCHIVE_EXTENSIONS = %w(zip rar)
+  EXCEL_EXTENSIONS = %w(xlsx xls csv)
+
   def extension_whitelist
-    %w(xlsx xls csv)
+    return ARCHIVE_EXTENSIONS + EXCEL_EXTENSIONS
   end
 
   def store_dir

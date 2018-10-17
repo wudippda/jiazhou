@@ -7,10 +7,10 @@ Rails.application.routes.draw do
   get 'report/find_expenses' => "report#find_expenses"
   get 'report/send_report/:id' => 'report#send_report'
 
-  # Excel report route
-  post 'excel_report/upload_report' => "excel_report#upload_report"
-  post 'excel_report/delete_report' => "excel_report#delete_report"
-  get 'excel_report/list_report' => "excel_report#list_report"
+  # housing_report report route
+  post 'housing_report/upload_report' => "housing_report#upload_report"
+  post 'housing_report/delete_report' => "housing_report#delete_report"
+  get 'housing_report/list_report' => "housing_report#list_report"
 
   # Authentication route
   get 'authentication' => "authentication#authenticate"

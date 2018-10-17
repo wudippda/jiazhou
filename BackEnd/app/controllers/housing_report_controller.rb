@@ -1,16 +1,16 @@
-class ExcelReportController < ApplicationController
+class HousingReportController < ApplicationController
 
-  UPLOAD_EXCEL_PARAM_KEY = 'upload'
-  LIST_REPORT_SHOW_KEYS = %w(id digest original_filename parsed excel created_at)
+  UPLOAD_REPORT_PARAM_KEY = 'upload'
+  LIST_REPORT_SHOW_KEYS = %w(id digest original_filename parsed report created_at)
 
   def upload_report
     uploadSuccess = false
     responseJson = {}
-    report = ExcelReport.new(excel: params[UPLOAD_EXCEL_PARAM_KEY], parsed: false)
+    report = HousingReport.new(report: params[UPLOAD_REPORT_PARAM_KEY], parsed: false)
     begin
       report.save!
       uploadSuccess = true
-    rescue ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
       uploadSuccess = false
       responseJson['errorMsg'] = e.message
       Rails.logger.error(e.message)
@@ -22,11 +22,11 @@ class ExcelReportController < ApplicationController
 
   def delete_report
     deleteSuccess = false
-    excelReport = ExcelReport.find_by(id: params[:id])
-    if excelReport
+    report = HousingReport.find_by(id: params[:id])
+    if report
       begin
-        excelReport.remove_excel!
-        excelReport.destroy!
+        report.remove_report!
+        report.destroy!
         deleteSuccess = true
       rescue StandardError => e
         Rails.logger.error(e.message)
@@ -38,7 +38,7 @@ class ExcelReportController < ApplicationController
   end
 
   def list_report
-    results =  ExcelReport.select(LIST_REPORT_SHOW_KEYS).page(params[:page])
+    results =  HousingReport.select(LIST_REPORT_SHOW_KEYS).order('created_at DESC').page(params[:page])
     render json: {reports: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
   end
 end

@@ -214,6 +214,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.1.6)
   rubyXL
+  rubyzip
   sass-rails (~> 5.0)
   selenium-webdriver
   simple_command
