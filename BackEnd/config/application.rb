@@ -16,6 +16,7 @@ module Jiazhou
     # -- all .rb files in that directory are automatically loaded.
 
     # Used for cross origin ajax call
+    config.middleware.use Rack::MethodOverride
     config.middleware.insert_before 0, Rack::Cors, :debug => true, :logger => (-> { Rails.logger }) do
       allow do
         origins '*'

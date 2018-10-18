@@ -1,0 +1,7 @@
+CleanUploadCacheJob:
+  description: 'Clean upload cache on a regular basis'
+  queue: clean_upload_cache
+  class: "CleanUploadCacheJob"
+  every:
+    - '10d'
+    - :first_in: '1s'
