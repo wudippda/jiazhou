@@ -21,10 +21,10 @@ class EmailJobController < ApplicationController
 
   def start_email_job
     name = 'send_emails'
-    config = {}
+    config = Hash.new
     config[:class] = 'SendEmailJob'
-    config[:args] = 'POC email subject'
-    config[:every] = ['5s', {first_in: '5s'}]
+    #config[:args] = {test: true}
+    config[:every] = ['30s', {first_in: '5s'}]
     config[:persist] = true
     job = Resque.set_schedule(name, config)
     Rails.logger.info(job)

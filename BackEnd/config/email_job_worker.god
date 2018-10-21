@@ -1,4 +1,4 @@
-rails_env   = ENV['RAILS_ENV']  || "production"
+rails_env   = ENV['RAILS_ENV']  || "development"
 rails_root  = ENV['RAILS_ROOT'] || File.dirname(__FILE__) + '/..'
 num_workers = 3
 

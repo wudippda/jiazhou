@@ -1,23 +1,765 @@
-<container>
-  <row class="header">
-    <columns>
-      <spacer size="16"></spacer>
-
-      <h4 class="text-center">
-        HAHAHA
-      </h4>
-    </columns>
-  </row>
-  <row>
-    <%= image_tag("https://image-charts.com/chart?chs=300x190&chd=t:60,40&cht=p3&chl=Hello%7CWorld&chan") %>
-    <table>
-      <% @receiver.properties.each do |property|%>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+  <tbody><tr>
+    <td align="center" valign="top" id="templateHeader" data-template-container="" style="background:#F7F7F7 url(&quot;https://gallery.mailchimp.com/c475b5126b9368c5ed921cd85/images/82903679-9396-44a3-b0bf-bf8fa25fe092.jpg&quot;) no-repeat center/cover;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #F7F7F7;background-image: url(https://gallery.mailchimp.com/c475b5126b9368c5ed921cd85/images/82903679-9396-44a3-b0bf-bf8fa25fe092.jpg);background-repeat: no-repeat;background-position: center;background-size: cover;border-top: 0;border-bottom: 0;padding-top: 33px;padding-bottom: 33px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
         <tr>
-          <td><%= @receiver.tenants.first.tenant_name %></td>
-          <td><%= property.address + " " + property.lot %></td>
+          <td align="center" valign="top" width="600" style="width:600px;">
+      <![endif]-->
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;max-width: 600px !important;">
+        <tbody><tr>
+          <td valign="top" class="headerContainer" style="background:transparent none no-repeat center/cover;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: transparent;background-image: none;background-repeat: no-repeat;background-position: center;background-size: cover;border-top: 0;border-bottom: 0;padding-top: 0;padding-bottom: 0;"></td>
         </tr>
-      <% end %>
-    </table>
-  </row>
-  <spacer size="16"></spacer>
-</container>
+        </tbody></table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" id="templateBody" data-template-container="" style="background:#FFFFFF none no-repeat center/cover;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #FFFFFF;background-image: none;background-repeat: no-repeat;background-position: center;background-size: cover;border-top: 0;border-bottom: 0;padding-top: 9px;padding-bottom: 9px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
+        <tr>
+          <td align="center" valign="top" width="600" style="width:600px;">
+      <![endif]-->
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;max-width: 600px !important;">
+        <tbody><tr>
+          <td valign="top" class="bodyContainer" style="background:transparent none no-repeat center/cover;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: transparent;background-image: none;background-repeat: no-repeat;background-position: center;background-size: cover;border-top: 0;border-bottom: 0;padding-top: 0;padding-bottom: 0;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
+
+                      <h4 style="display: block;margin: 0;padding: 0;color: #999999;font-family: Georgia;font-size: 20px;font-style: italic;font-weight: normal;line-height: 125%;letter-spacing: normal;text-align: center;"><span style="color:#000000"><strong><span style="font-family:arial,helvetica neue,helvetica,sans-serif"><span style="font-size:26px">Imcoming &amp; Expense Report</span></span></strong></span><br>
+                        <%= "#{@year} - #{@month}"%></h4>
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 27px 18px 0px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 9px 18px 0px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
+
+                      <p style="margin: 10px 0;padding: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #808080;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">Dear Mr/Mrs. <strong><%= @receiver.name%></strong><br>
+                        <br>
+                        Here is the detailed incoming and expense report for this month. Please kindly check with the information:</p>
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #EAEAEA;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px;font-style: normal;font-weight: normal;text-align: center;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;line-height: 150%;">
+
+                      <div style="text-align: left;"><span style="font-family:arial,helvetica neue,helvetica,sans-serif"><span style="color:#000000">Total Incoming for All Properties in <%= Date::MONTHNAMES[@month]%></span></span></div>
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnCodeBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <div class="mcnTextContent1">
+                  <style>
+                    .mcnTextContent1 table {
+                      font-family: arial, sans-serif;
+                      border-collapse: collapse;
+                      width: 100%;
+                    }
+
+                    .mcnTextContent1 td, .mcnTextContent1 th {
+                      border: 1px solid #dddddd;
+                      text-align: left;
+                      padding: 10px;
+                      overflow:hidden;
+                      white-space:nowrap
+                    }
+
+                    .mcnTextContent1 td:nth-child(n) {
+                      width: 100%;
+                    }
+
+                    .mcnTextContent1 tr:nth-child(even) {
+                      background-color: #F0F8FF;
+                    }
+                    .mcnTextContent1 .incomeTable tr:nth-child(even) {
+                      background-color: #CCFFCC;
+                    }
+                  </style>
+
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnCodeBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <div class="mcnTextContent1">
+                  <style>
+                    .mcnTextContent1 table {
+                      font-family: arial, sans-serif;
+                      border-collapse: collapse;
+                      width: 100%;
+                    }
+
+                    .mcnTextContent1 td, .mcnTextContent1 th {
+                      border: 1px solid #dddddd;
+                      text-align: left;
+                      padding: 10px;
+                      overflow:hidden;
+                      white-space:nowrap
+                    }
+
+                    .mcnTextContent1 td:nth-child(1) {
+                      width: 100%;
+                      font-weight: bold;
+                    }
+
+                    .mcnTextContent1 tr:last-child {
+                      border:2pt solid #B22222;
+                    }
+
+                    .mcnTextContent1 .incomeTable tr:last-child {
+                      border:2pt solid #32CD32;
+                    }
+
+                    .mcnTextContent1 .incomeTable tr:last-child td:last-child {
+                      text-align: center;
+                    }
+
+                    .mcnTextContent1 tr:nth-child(even) {
+                      background-color: #FFF0F0;
+                    }
+
+                    .mcnTextContent1 .incomeTable tr:nth-child(even) {
+                      background-color: #E9FFEE;
+                    }
+
+                  </style>
+
+                  <table class="incomeTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;font-family: arial, sans-serif;width: 100%;">
+                    <tbody><tr>
+                      <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"></th>
+                      <% @propertyIds.size.times do |t| %>
+                        <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Property <%= t + 1%></th>
+                      <% end %>
+<!--                      <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Property 2</th>-->
+<!--                      <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Property 3</th>-->
+<!--                      <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Property 4</th>-->
+                    </tr>
+<!--                    <tr>-->
+<!--                      <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Address</td>-->
+                      <%# @expenses.keys.each do |key|%>
+<!--                        <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%#= key%></th>-->
+                      <%# end %>
+<!--                    </tr>-->
+                    <tr>
+                      <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Income</td>
+                      <% @propertyIds.each do |property_id|%>
+                        <% propertyIncome = @expenses['Income'][property_id]%>
+                        <% if propertyIncome.size == 1 %>
+                          <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= costValueToStr(propertyIncome[0].cost)%></td>
+                          <% @totalIncomes += propertyIncome[0].cost %>
+                        <% end %>
+                      <% end %>
+                    </tr>
+                    <tr>
+                      <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Total</td>
+                      <td colspan="4" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= costValueToStr(@totalIncomes)%></td>
+                    </tr>
+                    </tbody></table>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 5px 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px none #EAEAEA;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px;line-height: 200%;text-align: left;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;">
+
+                      <span style="color:#000000">Total Expense Details for All Properties in <%= Date::MONTHNAMES[@month]%>:</span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnCodeBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <div class="mcnTextContent1">
+                  <table align="center" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;font-family: arial, sans-serif;width: 100%;">
+                    <tbody><tr>
+                      <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"></th>
+                      <% @propertyIds.size.times do |t| %>
+                        <th style="border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Property <%= t + 1 %></th>
+                      <% end %>
+                    </tr>
+                    <% @expenses.each do |category, expense|%>
+                      <% next if category == 'Income' %>
+                      <tr>
+                        <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= category%></td>
+                        <% @propertyIds.each do |property_id| %>
+                          <% if expense[property_id].nil? %>
+                            <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= 'N/A'%></td>
+                          <% elsif expense[property_id].size == 1 %>
+                            <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= costValueToStr(expense[property_id][0].cost)%></td>
+                            <% @outgoingSubtotal[property_id] += expense[property_id][0].cost %>
+                          <% end %>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                    <tr>
+                      <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Property Total</td>
+                      <% @propertyIds.each do |property_id| %>
+                        <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= costValueToStr(@outgoingSubtotal[property_id])%></td>
+                      <% end %>
+                      </tr>
+                    <tr>
+                      <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;">Total</td>
+                      <% totalOutgoingSum = 0 %>
+                      <% @outgoingSubtotal.each_value { |subtotal| totalOutgoingSum += subtotal } %>
+                      <td colspan="4" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;border: 1px solid #dddddd;text-align: left;padding: 10px;overflow: hidden;white-space: nowrap;"><%= costValueToStr(totalOutgoingSum) %></td>
+                    </tr>
+                    </tbody></table>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 18px 18px 0px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #EAEAEA;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="300" style="width:300px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 300px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-left: 18px;padding-bottom: 9px;padding-right: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
+
+                      <div style="text-align: center;"><span style="color:#000000"><span style="font-size:20px">Expense Category<br>
+Pie Chart</span></span></div>
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="300" style="width:300px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 300px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-left: 18px;padding-bottom: 9px;padding-right: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;">
+
+                      <div style="text-align: center;"><span style="color:#000000"><span style="font-size:20px">Property Income<br>
+Pie Chart</span></span></div>
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageGroupBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnImageGroupBlockOuter">
+
+            <tr>
+              <td valign="top" style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnImageGroupBlockInner">
+
+                <table align="left" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td class="mcnImageGroupContent" valign="top" style="padding-left: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+
+
+                      <img alt="" src="<%= raw @expensePieChartUrl %>" width="264" style="max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+
+                <table align="right" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td class="mcnImageGroupContent" valign="top" style="padding-right: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+
+
+                      <img alt="" src="<%= raw @propertyIncomePieChartUrl %>" width="264" style="max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+
+              </td>
+            </tr>
+
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px;line-height: 200%;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #808080;font-family: Helvetica;font-size: 16px;text-align: left;">
+
+                      <p style="line-height: 200%;margin: 10px 0;padding: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #808080;font-family: Helvetica;font-size: 16px;text-align: left;">Thanks for choosing our service! If you have any questions or suggestions, feel free to contact us via the following methods.</p>
+
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table></td>
+        </tr>
+        </tbody></table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" id="templateFooter" data-template-container="" style="background:#333333 none no-repeat center/cover;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #333333;background-image: none;background-repeat: no-repeat;background-position: center;background-size: cover;border-top: 0;border-bottom: 0;padding-top: 0px;padding-bottom: 0px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
+        <tr>
+          <td align="center" valign="top" width="600" style="width:600px;">
+      <![endif]-->
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;max-width: 600px !important;">
+        <tbody><tr>
+          <td valign="top" class="footerContainer" style="background:transparent none no-repeat center/cover;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: transparent;background-image: none;background-repeat: no-repeat;background-position: center;background-size: cover;border-top: 0;border-bottom: 0;padding-top: 0;padding-bottom: 0;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnFollowBlockOuter">
+            <tr>
+              <td align="center" valign="top" style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentContainer" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td align="center" style="padding-left: 9px;padding-right: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContent">
+                        <tbody><tr>
+                          <td align="center" valign="top" style="padding-top: 9px;padding-right: 9px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                              <tbody><tr>
+                                <td align="center" valign="top" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                  <!--[if mso]>
+                                  <table align="center" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                  <![endif]-->
+
+                                  <!--[if mso]>
+                                  <td align="center" valign="top">
+                                  <![endif]-->
+
+
+                                  <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <tbody><tr>
+                                      <td valign="top" style="padding-right: 10px;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                          <tbody><tr>
+                                            <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                              <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+
+                                                  <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                    <a href="http://www.facebook.com" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/outline-light-facebook-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                  </td>
+
+
+                                                </tr>
+                                                </tbody></table>
+                                            </td>
+                                          </tr>
+                                          </tbody></table>
+                                      </td>
+                                    </tr>
+                                    </tbody></table>
+
+                                  <!--[if mso]>
+                                  </td>
+                                  <![endif]-->
+
+                                  <!--[if mso]>
+                                  <td align="center" valign="top">
+                                  <![endif]-->
+
+
+                                  <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <tbody><tr>
+                                      <td valign="top" style="padding-right: 10px;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                          <tbody><tr>
+                                            <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                              <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+
+                                                  <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                    <a href="http://www.twitter.com/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/outline-light-twitter-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                  </td>
+
+
+                                                </tr>
+                                                </tbody></table>
+                                            </td>
+                                          </tr>
+                                          </tbody></table>
+                                      </td>
+                                    </tr>
+                                    </tbody></table>
+
+                                  <!--[if mso]>
+                                  </td>
+                                  <![endif]-->
+
+                                  <!--[if mso]>
+                                  <td align="center" valign="top">
+                                  <![endif]-->
+
+
+                                  <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                    <tbody><tr>
+                                      <td valign="top" style="padding-right: 0;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                          <tbody><tr>
+                                            <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                              <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+
+                                                  <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                    <a href="http://www.instagram.com/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/outline-light-instagram-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                  </td>
+
+
+                                                </tr>
+                                                </tbody></table>
+                                            </td>
+                                          </tr>
+                                          </tbody></table>
+                                      </td>
+                                    </tr>
+                                    </tbody></table>
+
+                                  <!--[if mso]>
+                                  </td>
+                                  <![endif]-->
+
+                                  <!--[if mso]>
+                                  </tr>
+                                  </table>
+                                  <![endif]-->
+                                </td>
+                              </tr>
+                              </tbody></table>
+                          </td>
+                        </tr>
+                        </tbody></table>
+                    </td>
+                  </tr>
+                  </tbody></table>
+
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;">
+            <tbody class="mcnDividerBlockOuter">
+            <tr>
+              <td class="mcnDividerBlockInner" style="min-width: 100%;padding: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #505050;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                  <tbody><tr>
+                    <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                      <span></span>
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--
+                                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+                -->
+              </td>
+            </tr>
+            </tbody>
+          </table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <tbody class="mcnTextBlockOuter">
+            <tr>
+              <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                  <tr>
+                <![endif]-->
+
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                  <tbody><tr>
+
+                    <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #FFFFFF;font-family: Helvetica;font-size: 12px;line-height: 150%;text-align: center;">
+
+                      <em>Copyright © ZhangYiKai's Company, All rights reserved.</em><br>
+                      <br>
+                      <strong>Our mailing address is:</strong><br>
+                      ZhangYiKai@diqiu.com
+                    </td>
+                  </tr>
+                  </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+              </td>
+            </tr>
+            </tbody>
+          </table></td>
+        </tr>
+        </tbody></table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+  </tbody></table>

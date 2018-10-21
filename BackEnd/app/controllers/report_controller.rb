@@ -11,7 +11,6 @@ class ReportController < ApplicationController
   TENANT_NAME_LABEL = 'TENANT(S)'
   TENANT_PHONE_LABEL = 'TENANT PHONE#'
   EXPIRE_DATE_LABEL = 'LEASE EXPIRE DATE'
-  EXPENSE_DATE_FORMAT_STRING = '%m/%Y'
   EMPTY_VALUE = ''
   MONTH_COUNT_FOR_ONE_YEAR = 12
   EXPENSE_COST_FORMAT_STRING = '%.2f'
@@ -228,7 +227,7 @@ class ReportController < ApplicationController
     resArray = Array.new
     MONTH_COUNT_FOR_ONE_YEAR.times do |idx|
       raise ReportParsingException.new("Parsing error! Expense missed for category #{row[0]} at column #{idx + 1}") if row[idx + 1].nil?
-      date = DateTime.strptime("#{idx + 1}/#{taxYear}", EXPENSE_DATE_FORMAT_STRING)
+      date = DateTime.strptime("#{idx + 1}/#{taxYear}", Property::EXPENSE_DATE_FORMAT_STRING)
       resArray << {
           date: date,
           is_cost: isCost,
