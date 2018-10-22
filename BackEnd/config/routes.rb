@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get 'email_job/start_job' => "email_job#start_email_job"
   get 'email_job/stop_job' => "email_job#stop_email_job"
   get 'email_job/create_job' => "email_job#create_email_job"
+  get 'email_job/list_job' => "email_job#list_email_job"
 
   #resque backend
   require 'resque/server'

@@ -11,15 +11,15 @@ class UserMailer < ApplicationMailer
   after_action :set_email_configuration
   helper_method :costValueToStr
 
-  def incoming_email(receiver, date)
+  def incoming_email(from, to, date)
     dt = DateTime.strptime(date, EXPENSE_DATE_FORMAT_STRING)
-    @receiver = receiver
+    @receiver = from
     @month = dt.month
     @year = dt.year
     temp = Hash.new
     @expenses = Hash.new
 
-    @propertyIds = receiver.properties.all.map(&:id).sort
+    @propertyIds = @receiver.properties.all.map(&:id).sort
     @receiver.properties.each {|property| temp.merge!(property.findExpensesBetween(date, date, :category)){|key, oldval, newval| newval + oldval}}
     temp.each { |key, value| @expenses[key] = value.group_by{ |e| e.property_id } }
 
@@ -29,7 +29,7 @@ class UserMailer < ApplicationMailer
     @expensePieChartUrl = generateExpenseChart(temp)
     @propertyIncomePieChartUrl = generatePropertyIncomeChart(temp)
 
-    mail(to: @receiver.email, subject: generate_subject)
+    mail(from: from, to: to, subject: generate_subject)
   end
 
   def costValueToStr(value)

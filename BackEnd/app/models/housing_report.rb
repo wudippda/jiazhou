@@ -11,4 +11,6 @@ class HousingReport < ApplicationRecord
     end
     return true
   end
+
+  validates :digest, uniqueness: true
 end

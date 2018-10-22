@@ -145,36 +145,41 @@ class ReportController < ApplicationController
       tenantFields = row[:tenantFields]
       contractFields = row[:contractFields]
 
-      user = User.where(email: userFields[:email]).first_or_create!(userFields)
-      userUpdates = diff_attrs_updates(user.attributes, userFields)
-      user.update(userUpdates) if !userUpdates.empty?
+      ActiveRecord::Base.transaction do
+        user = User.where(email: userFields[:email]).first_or_create!(userFields)
+        userUpdates = diff_attrs_updates(user.attributes, userFields)
+        user.update(userUpdates) if !userUpdates.empty?
 
-      tenant = user.tenants.where(tenant_email: tenantFields[:tenant_email]).first_or_create!(tenantFields)
-      tenantUpdates = diff_attrs_updates(tenant.attributes, tenantFields)
-      tenant.update(tenantUpdates) if !tenantUpdates.empty?
+        tenant = user.tenants.where(tenant_email: tenantFields[:tenant_email]).first_or_create!(tenantFields)
+        tenantUpdates = diff_attrs_updates(tenant.attributes, tenantFields)
+        tenant.update(tenantUpdates) if !tenantUpdates.empty?
 
-      property = user.properties.where(address: propertyFields[:address], lot: propertyFields[:lot]).first_or_create!(propertyFields)
-      propertyUpdates = diff_attrs_updates(property.attributes, propertyFields)
-      tenant.update(propertyUpdates) if !propertyUpdates.empty?
+        property = user.properties.where(address: propertyFields[:address], lot: propertyFields[:lot]).first_or_create!(propertyFields)
+        propertyUpdates = diff_attrs_updates(property.attributes, propertyFields)
+        tenant.update(propertyUpdates) if !propertyUpdates.empty?
 
-      expireDate = contractFields[:expire_date]
-      user.renting_contracts.where(tenant_id: tenant.id).update(property_id: property.id, expire_date: DateTime.strptime(expireDate))
+        expireDate = contractFields[:expire_date]
+        user.renting_contracts.where(tenant_id: tenant.id).update(property_id: property.id, expire_date: DateTime.strptime(expireDate))
+      end
     end
   end
 
   def persist_monthly_report_data(monthlyReportList)
     #{propertyOwner: propertyOwner, propertyAddress: propertyAddress, expenses: expenses}
-    monthlyReportList.each do |row|
-      propertyOwner = row[:propertyOwner]
-      propertyAddress = row[:propertyAddress]
-      expenses = row[:expenses]
-      Property.where(address: propertyAddress).each do |property|
-        if property.user.name.downcase == propertyOwner.downcase
-            expenses.each do |expense|
-              expense[:property_id] = property.id
-              Expense.new(expense).save!
-            end
-          break
+    ActiveRecord::Base.transaction do
+      monthlyReportList.each do |row|
+        propertyOwner = row[:propertyOwner]
+        propertyAddress = row[:propertyAddress]
+        expenses = row[:expenses]
+
+        Property.where(address: propertyAddress).each do |property|
+          if property.user.name.downcase == propertyOwner.downcase
+              expenses.each do |expense|
+                expense[:property_id] = property.id
+                Expense.new(expense).save!
+              end
+            break
+          end
         end
       end
     end
@@ -364,6 +369,8 @@ class ReportController < ApplicationController
         Rails.logger.debug('ReportParsingException raised!')
         respondJson['parseSuccess'] = false
         respondJson['errorMsg'] = e.message
+
+        render json: respondJson
       ensure
         if extractDirectory && extractDirectory.start_with?(fileDirectory)
           FileUtils.rm_rf(extractDirectory)
