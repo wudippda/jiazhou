@@ -1,7 +1,6 @@
 class UserMailer < ApplicationMailer
 
   DEFAULT_SUBJECT = "Monthly Incoming & Expense Report for"
-  EXPENSE_DATE_FORMAT_STRING = '%m/%Y'
   INCOME_LABEL = 'Income'.downcase
   NOT_AVAILABLE = 'N/A'
   IMAGE_CHART_BASE_URL = 'https://image-charts.com/chart?'
@@ -12,7 +11,7 @@ class UserMailer < ApplicationMailer
   helper_method :costValueToStr
 
   def incoming_email(from, to, date)
-    dt = DateTime.strptime(date, EXPENSE_DATE_FORMAT_STRING)
+    dt = DateTime.strptime(date, ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
     @receiver = from
     @month = dt.month
     @year = dt.year

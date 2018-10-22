@@ -6,7 +6,7 @@ class SendEmailJob
   def self.before_perform_scan_update_status(jobId)
     @emailJob = EmailJob.find_by(id: jobId)
     if !emailJob.nil?
-      emailJob.update(status: EmailJob::statuses.active)
+      emailJob.active!
     else
       #Resque.logger.error("Job with related id not found! Quit job.")
       raise Resque::Job::DontPerform, 'Job with related id not found! Quit job.'
@@ -37,7 +37,7 @@ class SendEmailJob
     end
   ensure
     execitionStatus = (sendRes[:fail_to] == 0 && sendRes[:success_to] == sendRes[:total_to]) ?
-                          EmailJobHistory::statuses.success : EmailJobHistory::statuses.fail
+                          EmailJobHistory::statuses[:success] : EmailJobHistory::statuses[:fail]
     executionHistory.update(sendRes.merge!({status: execitionStatus}))
   end
 end
