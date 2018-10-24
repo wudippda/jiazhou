@@ -5,7 +5,7 @@ num_workers = 1
 num_workers.times do |num|
   God.watch do |w|
     w.dir      = "#{rails_root}"
-    w.name     = "email_job_scheduler-#{num}"
+    w.name     = "email_job_scheduler_#{num}"
     w.group    = 'resque_scheduler'
     w.interval = 30.seconds
     w.env      = {"QUEUE"=>"*", "RAILS_ENV"=>rails_env, "DYNAMIC_SCHEDULE"=>true}

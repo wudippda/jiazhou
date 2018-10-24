@@ -5,22 +5,26 @@ class UserMailer < ApplicationMailer
   NOT_AVAILABLE = 'N/A'
   IMAGE_CHART_BASE_URL = 'https://image-charts.com/chart?'
   IMAGE_SIZE = '250x250'
+  DEFAULT_FROM = '<DO_NOT_REPLY>AutoSender_yikai@diqiu.com'
 
   # Mail configuration
   after_action :set_email_configuration
   helper_method :costValueToStr
 
   def incoming_email(from, to, date)
-    dt = DateTime.strptime(date, ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
-    @receiver = from
+    dt = date.to_datetime
+    Rails.logger.info(dt)
+    @receiver = User.find_by!(email: from)
     @month = dt.month
     @year = dt.year
     temp = Hash.new
     @expenses = Hash.new
 
     @propertyIds = @receiver.properties.all.map(&:id).sort
-    @receiver.properties.each {|property| temp.merge!(property.findExpensesBetween(date, date, :category)){|key, oldval, newval| newval + oldval}}
+    @receiver.properties.each {|property| temp.merge!(property.findExpensesBetween(dt, dt, :category)){|key, oldval, newval| newval + oldval}}
     temp.each { |key, value| @expenses[key] = value.group_by{ |e| e.property_id } }
+
+    Rails.logger.info(@expenses)
 
     @totalIncomes = 0
     @outgoingSubtotal = Hash[@propertyIds.map {|x| [x, 0]}]
@@ -29,6 +33,8 @@ class UserMailer < ApplicationMailer
     @propertyIncomePieChartUrl = generatePropertyIncomeChart(temp)
 
     mail(from: from, to: to, subject: generate_subject)
+  rescue StandardError => e
+    raise e
   end
 
   def costValueToStr(value)

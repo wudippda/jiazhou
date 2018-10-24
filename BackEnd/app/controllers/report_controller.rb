@@ -232,7 +232,7 @@ class ReportController < ApplicationController
     resArray = Array.new
     MONTH_COUNT_FOR_ONE_YEAR.times do |idx|
       raise ReportParsingException.new("Parsing error! Expense missed for category #{row[0]} at column #{idx + 1}") if row[idx + 1].nil?
-      date = DateTime.strptime("#{idx + 1}/#{taxYear}", Property::EXPENSE_DATE_FORMAT_STRING)
+      date = DateTime.strptime("#{idx + 1}/#{taxYear}", ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
       resArray << {
           date: date,
           is_cost: isCost,

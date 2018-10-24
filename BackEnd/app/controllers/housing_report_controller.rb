@@ -4,37 +4,36 @@ class HousingReportController < ApplicationController
   LIST_REPORT_SHOW_KEYS = %w(id digest original_filename parsed report created_at)
 
   def upload_report
-    uploadSuccess = false
-    responseJson = {}
+    success = false
+    responseJson = Hash.new
+
     report = HousingReport.new(report: params[UPLOAD_REPORT_PARAM_KEY], parsed: false)
     begin
       report.save!
-      uploadSuccess = true
+      success = true
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
-      uploadSuccess = false
-      responseJson['errorMsg'] = e.message
       Rails.logger.error(e.message)
+      responseJson['error'] = e.message
     ensure
-      responseJson['uploadSuccess'] = uploadSuccess
+      responseJson['success'] = success
       render json: responseJson
     end
   end
 
   def delete_report
-    deleteSuccess = false
-    report = HousingReport.find_by(id: params[:id])
-    if report
-      begin
-        report.remove_report!
-        report.destroy!
-        deleteSuccess = true
-      rescue StandardError => e
-        Rails.logger.error(e.message)
-      end
-    else
-      deleteSuccess = true
+    success = false
+    responseJson = Hash.new
+
+    begin
+      report = HousingReport.find_by!(id: params[:id])
+      report.remove_report!
+      report.destroy!
+      success = true
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      responseJson['error'] = e.message
     end
-    render json: {deleteSuccess: deleteSuccess}
+    render json: responseJson
   end
 
   def list_report
