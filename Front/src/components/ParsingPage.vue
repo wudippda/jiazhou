@@ -6,8 +6,8 @@
             </Breadcrumb>
             <br>
             <br>
-            <Button class="left" type="success" icon="upload" shape="circle" size="large" :loading="isUploading" @click="startUpload">{{lanDisplay[languageType][name]['upload']}}</Button>
-            <input type="file" id="excel" style="display: none" accept="application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            <Button class="left" type="success" icon="upload" shape="circle" size="large" :loading="isUploading" @click="startUpload">{{lanDisplay[languageType][name]['upload']}} <span id="progress"></span> </Button>
+            <input type="file" id="excel" style="display: none" accept="application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,aplication/zip,application/rar">
         </div>
         <br>
         <Row type="flex" justify="center">
@@ -33,7 +33,7 @@
                         </Col>
                     </Row>
 
-                    <a href="#" slot="extra" @click.prevent="deleteParse">
+                    <a href="#" slot="extra" @click.prevent="deleteParse(item)">
                         <Icon type="ios-close-outline"></Icon>
                     </a>
                 </Card>
@@ -47,7 +47,7 @@
 <script>
 
 import { lan } from '../../config/languageConf.js'
-import { uploadExcelFile, getReports } from '../service/apis'
+import { uploadExcelFile, getReports, deleteReport } from '../service/apis'
 import { baseUrl } from '../../config/index'
 
 import $ from 'jquery'
@@ -74,14 +74,28 @@ export default {
             this.currentPage = page
             this.initData(page)
         },
-        deleteParse () {
-            this.$Notice.success({
-                title: 'Delete',
-                desc: 'Delete'
+        deleteParse (item) {
+            deleteReport(item.id).then(res => {
+                console.log(res)
+                if (res['deleteSuccess'] === true) {
+                    console.log('test')
+                    this.$Notice.success({
+                        title: this.lanDisplay[this.languageType][this.name]['success']['successToDelete']['title'],
+                        desc: this.lanDisplay[this.languageType][this.name]['success']['successToDelete']['desc']
+                    }) 
+                    this.initData(1)  
+                }
+            }).catch(err => {
+                console.error(err)
+                this.$Notice.error({
+                    title: this.lanDisplay[this.languageType][this.name]['success']['failToDelete']['title'],
+                    desc: this.lanDisplay[this.languageType][this.name]['success']['failToDelete']['desc']
+                })
             })
         },
         startUpload () {
             $('#excel').click()
+            $('#progress').html('')
             $('#excel').change(() => {
                 console.log('fuck')
                 this.uploadExcel()
@@ -117,7 +131,7 @@ export default {
         },
         async initData (page) {
             getReports(page).then(res => {
-                console.log(res)
+                console.log('reports', res)
                 this.reports = res.reports
                 this.currentPage = Number.parseInt(res.currentPage)
                 this.totalPage = res.totalPage
