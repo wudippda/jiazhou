@@ -11,7 +11,14 @@ class DetailListController < ApplicationController
     userId = params[:userId]
     user = User.find_by(id: userId)
     if user
-      render json: {properties: user.properties.as_json, tenants: user.tenants.as_json}
+      properties = user.properties
+      res = Array.new
+
+      properties.each do |property|
+        contract = user.renting_contracts.where(property_id: property.id).order(expire_date: :desc).first
+        res << {property: property.as_json, tenant: Tenant.find_by(id: contract.tenant_id).as_json}
+      end
+      render json: res
     else
       render json: {error: "No user found with id #{userId}"}
     end
@@ -25,7 +32,7 @@ class DetailListController < ApplicationController
     userId = params[:userId]
 
     User.find_by(id: userId).properties.each do |property|
-      res = property.findExpensesBetween(DateTime.strptime(startDate, EXPENSE_DATE_FORMAT_STRING), DateTime.strptime(endDate, EXPENSE_DATE_FORMAT_STRING))
+      res = property.findExpensesBetween(DateTime.strptime(startDate, EXPENSE_DATE_FORMAT_STRING), DateTime.strptime(endDate, EXPENSE_DATE_FORMAT_STRING), :category)
       break
     end
     render json: {res: res}
