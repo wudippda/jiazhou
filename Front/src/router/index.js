@@ -12,11 +12,11 @@ Vue.use(Router)
 export default new Router({
     routes: [{
             path: '/',
-            redirect: '/home'
+            redirect: '/parsingPage/CN'
         },
         {
             path: '/login',
-            name: 'login',
+            name: '',
             components: {
                 mainPage: Login
             }
@@ -33,7 +33,7 @@ export default new Router({
                     component: Dashboard
                 },
                 {
-                    path: '/houses',
+                    path: '/houses/:lan',
                     name: 'housePage',
                     component: HousePage
                 },

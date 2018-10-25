@@ -97,7 +97,7 @@ export default {
                     break
                 case 'housePage':
                     this.activeName = 'housePage'
-                    this.$router.push({name: 'housePage'})
+                    this.$router.push({name: 'housePage', params: {lan: this.languageType}})
                     break
                 case 'emailSettingPage':
                     this.activeName = 'emailSettingPage'

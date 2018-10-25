@@ -145,8 +145,12 @@ export default {
                             //     this.$Message.error(res.body.errorMessage)
                             // }
                             console.log(res)
-                            allocateDocker('testUser', 'qazwsxedc').then(res => {
+                            let userId = Number.parseInt(this.registerFormValidation.email[0])
+                            allocateDocker(userId, this.registerFormValidation.pwd).then(res => {
                                 console.log(res)
+                                let url = ''
+                                url = res['url']
+                                window.location.href = 'http://10.60.42.201' + url
                             }).catch(err => {
                                 console.error(err)
                             })
@@ -180,13 +184,7 @@ export default {
         
     },
     created () {
-        console.log(1)
-        allocateDocker('testUser', 'qazwsxedc').then(res => {
-                                console.log(res)
-                            }).catch(err => {
-                                // console.error(err)
-                            })
-        console.log(2)
+    
     }
 }
 </script>

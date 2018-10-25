@@ -1,14 +1,14 @@
 import { baseUrl } from '../../config/index'
 import $ from 'jquery'
 
-var ibm = 'http://192.168.1.150:5000/'
+var ibm = 'http://10.60.42.201/'
 
-export default async(type = 'GET', url = '', data = null, method = 'normal') => {
+export default async(type = 'GET', url = '', data = null, method = 'normal', proId = '') => {
     type = type.toUpperCase()
 
     if (method === 'ibm') {
         url = ibm + url
-        console.log('hehe')
+        method = 'upload'
     } else {
         url = baseUrl + url
     }
@@ -48,6 +48,50 @@ export default async(type = 'GET', url = '', data = null, method = 'normal') => 
                 resolve(err)
             })
         } else if (method === 'upload') {
+            let formData = new FormData()
+            for (let k in data) {
+                formData.append(k, data[k])
+            }
+
+            $.ajax({
+                type: type,
+                url: url,
+                processData: false,
+                contentType: false,
+                // xhrFields: {
+                //     withCredentials: server == 'base' ? true : false
+                // },
+                crossDomain: true,
+                data: formData,
+                timeout: 1000000,
+                xhr: function() {
+                    let myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                var percent = Math.floor(e.loaded / e.total * 100);
+                                if (percent <= 100) {
+                                    // $("#J_progress_bar").progress('set progress', percent);
+                                    // $("#J_progress_label").html('已上传：'+percent+'%');
+                                    console.log(percent)
+                                }
+                                if (percent >= 100) {
+                                    // $("#J_progress_label").html('文件上传完毕，请等待...');
+                                    // $("#J_progress_label").addClass('success');
+                                    $(proId).html('100%')
+                                    console.log('OK')
+                                }
+                            }
+                        }, false);
+                    }
+                    return myXhr;
+                }
+            }).done(res => {
+                resolve(res)
+            }).catch(err => {
+                resolve(err)
+            })
+        } else if (method === 'p') {
             let formData = new FormData()
             for (let k in data) {
                 formData.append(k, data[k])

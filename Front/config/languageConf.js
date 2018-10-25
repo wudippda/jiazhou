@@ -55,14 +55,25 @@ var lan = {
                 successToUpload: {
                     title: 'Success',
                     desc: 'Success to upload your file!'
+                },
+                successToDelete: {
+                    title: 'Success',
+                    desc: 'Success to delete this report!'
                 }
             },
             errors: {
                 failToUpload: {
                     title: 'Sorry',
                     desc: 'Fail to upload your excel file, error msg: '
+                },
+                failToDelete: {
+                    title: 'Sorry',
+                    desc: 'Fail to delete this report!'
                 }
             }
+        },
+        HousingPage: {
+            title: 'Housing Center'
         }
     },
     CN: {
@@ -96,6 +107,10 @@ var lan = {
                     failToUpdate: {
                         title: '出错了',
                         desc: '更新邮件IP失败'
+                    },
+                    failToDelete: {
+                        title: '出错了',
+                        desc: '删除报告失败了!'
                     }
                 }
             },
@@ -121,6 +136,10 @@ var lan = {
                 successToUpload: {
                     title: '成功',
                     desc: '成功上传!'
+                },
+                successToDelete: {
+                    title: '成功',
+                    desc: '成功删除报告!'
                 }
             },
             errors: {
@@ -130,6 +149,9 @@ var lan = {
                 }
             }
         },
+        HousingPage: {
+            title: '房产中心'
+        }
     }
 }
 
