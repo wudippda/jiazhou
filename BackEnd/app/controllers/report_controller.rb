@@ -162,6 +162,7 @@ class ReportController < ApplicationController
       propertyOwner = row[:propertyOwner]
       propertyAddress = row[:propertyAddress]
       expenses = row[:expenses]
+      persisted = false
 
       Property.where(address: propertyAddress).each do |property|
         if property.user.name.downcase == propertyOwner.downcase
@@ -170,9 +171,11 @@ class ReportController < ApplicationController
                                       category: expense[:category]).first_or_create!(expense.merge({property_id: property.id}))
               e.update(cost: expense[:cost]) if e.cost != expense[:cost]
             end
+            persisted = true
           break
         end
       end
+      raise ReportParsingException.new("No record found with 'propertyOwner': #{propertyOwner} or 'propertyAddress': #{propertyAddress}") if !persisted
     end
   end
 
@@ -185,8 +188,10 @@ class ReportController < ApplicationController
 
     rowLimit = (r != -1 ? [r, dataSheet.size].min : dataSheet.size)
     rowLimit.times do |idx|
+      next if dataSheet[idx].nil?
       colLimit = (c != -1 ? [c, dataSheet[idx].cells.size].min : dataSheet[idx].cells.size)
       (colLimit + 1).times do |idy|
+        next if dataSheet[idx][idy].nil?
         return [idx, idy] if matchAnchor(readValue(dataSheet[idx][idy].value), anchor, mode)
       end
     end
@@ -207,15 +212,15 @@ class ReportController < ApplicationController
     format(EXPENSE_COST_FORMAT_STRING, costStr.gsub('$', ''))
   end
 
-  def parse_single_row_expense(row, taxYear, category, isCost)
+  def parse_single_row_expense(row, taxYear, category, isCost, colIndex)
     resArray = Array.new
     MONTH_COUNT_FOR_ONE_YEAR.times do |idx|
-      raise ReportParsingException.new("Parsing error! Expense missed for category #{row[0]} at column #{idx + 1}") if row[idx + 1].nil?
+      raise ReportParsingException.new("Parsing error! Expense missed for category #{row[0]} at column #{colIndex + idx + 1}") if row[idx + 1].nil?
       date = DateTime.strptime("#{idx + 1}/#{taxYear}", ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
       resArray << {
           date: date,
           is_cost: isCost,
-          cost: costToDecimal(readValue(row[idx + 2].value)),
+          cost: costToDecimal(readValue(row[colIndex + idx + 2].value)),
           category: category
       }
     end
@@ -272,7 +277,7 @@ class ReportController < ApplicationController
     Rails.logger.debug("Income pos: #{incomeIndex}, Expense start pos: #{expenseStartIndex}, Expense stop pos: #{expenseStopIndex}")
 
     # Read incoming expenses
-    incomingExpenses = parse_single_row_expense(monthlySheetData[incomeIndex[0]], taxYear, incomeCategory,false)
+    incomingExpenses = parse_single_row_expense(monthlySheetData[incomeIndex[0]], taxYear, incomeCategory,false, incomeIndex[1])
     Rails.logger.info("IncomingExpense size: #{incomingExpenses.size}")
     Rails.logger.info("IncomingExpense: #{incomingExpenses}")
     incomingExpenses.each { |expenseData| expenses << expenseData }
@@ -280,12 +285,12 @@ class ReportController < ApplicationController
     # Read outgoing expenses
     otherCategoryCount = 1
     (expenseStartIndex[0] + 1..expenseStopIndex[0] - 1).each do |rowIndex|
-      category = readValue(monthlySheetData[rowIndex][0].value)
+      category = readValue(monthlySheetData[rowIndex][incomeIndex[1]].value)
       if category.downcase == MONTH_INCOME_OTHER_CATEGORY_LABEL
         category += otherCategoryCount.to_s
         otherCategoryCount += 1
       end
-      outgoingExpenses = parse_single_row_expense(monthlySheetData[rowIndex], taxYear, category,true)
+      outgoingExpenses = parse_single_row_expense(monthlySheetData[rowIndex], taxYear, category,true, expenseStopIndex[1])
       outgoingExpenses.each { |expenseData| expenses << expenseData }
     end
     Rails.logger.info("expenses size: #{expenses.size}")
@@ -336,6 +341,7 @@ class ReportController < ApplicationController
           workbook = RubyXL::Parser.parse(r)
           workbook.worksheets.each do |sheet|
             sheetName = sheet.sheet_name.strip.downcase
+            Rails.logger.debug("sheetName: #{sheetName}")
             if sheetName == CUSTOMER_LIST_SHEET_NAME
               customerList += parse_customer_list(sheet)
             elsif sheetName.start_with?(PROPERTY_INCOME_SHEET_NAME_PREFIX)
