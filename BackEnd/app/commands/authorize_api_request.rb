@@ -1,8 +1,8 @@
 class AuthorizeApiRequest
   prepend SimpleCommand
 
-  def initialize(headers = {})
-    @headers = headers
+  def initialize(collection = {})
+    @collection = collection
   end
 
   def call
@@ -11,7 +11,7 @@ class AuthorizeApiRequest
 
   private
 
-  attr_reader :headers
+  attr_reader :params
 
   def admin
     @admin ||= Admin.find(decoded_auth_token[:user_id]) if decoded_auth_token
@@ -19,12 +19,12 @@ class AuthorizeApiRequest
   end
 
   def decoded_auth_token
-    @decoded_auth_token ||= JsonWebToken.decode(http_auth_header)
+    @decoded_auth_token ||= JsonWebToken.decode(http_auth_token)
   end
 
-  def http_auth_header
-    if headers['Authorization'].present?
-      return headers['Authorization'].split(' ').last
+  def http_auth_token
+    if @collection[:access_token].present?
+      return @collection[:access_token]
     else
       errors.add(:token, 'Missing token')
     end

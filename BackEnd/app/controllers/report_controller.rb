@@ -27,18 +27,6 @@ class ReportController < ApplicationController
     return encode(value.to_s || EMPTY_VALUE).strip
   end
 
-  def send_report
-    @user = User.find(params[:id])
-    @reportType = params[:report_type] || "full"
-
-    if @user
-      #@report = generate_report(@user, @report_type)
-      MonthlyReportMailer.with(receiver: @user).send_monthly_report_email.deliver_now
-    end
-
-    render json: {res: true}
-  end
-
   def parse_customer_list_by_row(rowData)
     # User fields
     ownerEmail = rowData[PROPERTY_OWNER_EMAIL_LABEL]
@@ -326,7 +314,7 @@ class ReportController < ApplicationController
         if ReportUploader::ARCHIVE_EXTENSIONS.include?(extension)
           FileUtils.mkdir_p(extractDirectory)
           reportsToParse += get_archived_reports(report.report.current_path, extractDirectory)
-          #FileUtils.rm_rf(extractDirectory)
+          FileUtils.rm_rf(extractDirectory)
         elsif ReportUploader::EXCEL_EXTENSIONS.include?(extension)
           reportsToParse << report.report.current_path
         end
