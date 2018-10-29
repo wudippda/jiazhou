@@ -9,10 +9,9 @@ class EmailJobController < ApplicationController
     errors = Hash.new
 
     ActiveRecord::Base.transaction do
-      report_start = DateTime.strptime(params[:report_start], ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
-      report_end = DateTime.strptime(params[:report_end], ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
-      emailJob = EmailJob.create!({job_name: params[:job_name], from: params[:from], to: params[:to], report_start: report_start.to_s,
-                                  report_end: report_end.to_s, job_type: params[:job_type], config: params[:config]})
+      #report_start = DateTime.strptime(params[:report_start], ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
+      #report_end = DateTime.strptime(params[:report_end], ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
+      emailJob = EmailJob.create!({job_name: params[:job_name], from: params[:from], to: params[:to], job_type: params[:job_type], config: params[:config]})
       emailJob.job_status_idle!
     end
     success = true
@@ -64,20 +63,24 @@ class EmailJobController < ApplicationController
 
       case emailJob.job_type.downcase
         when EmailJob.job_types[:schedule]
-          if scheduleConfig[:cron].nil? && scheduleConfig[:every].nil?
-            errors = {config: 'either "cron" nor "every" config should be present for a schedule job!'}
+          if scheduleConfig[:cron].nil?
+            errors = {config: '"cron" config should be present for a schedule job!'}
           elsif !emailJob.job_status_idle?
             errors = {status: 'only idle job can be started!'}
           else
-            if scheduleConfig[:cron].nil?
-              config[:every] = [scheduleConfig[:every], { first_in: scheduleConfig[:first_in] ? scheduleConfig[:first_in] : '1s'}]
+            repeatParams = Hash.new
+            repeatParams[:first_in] = scheduleConfig[:first_in] || '1s'
+            # last_at takes more priority than times
+            if scheduleConfig[:last_at]
+              repeatParams[:last_at] = Time.now + 190 * 1
             else
-              config[:cron] = scheduleConfig[:cron]
+              repeatParams[:times] = scheduleConfig[:times].to_i if scheduleConfig[:times]
             end
+
+            config[:cron] = [scheduleConfig[:cron], repeatParams]
             config[:class] = SendEmailJob.name
             config[:persist] = true
-            config[:args] = {jobId: emailJob.id, from: emailJob.from, to: emailJob.to,
-                             report_start: emailJob.report_start, report_end: emailJob.report_end}.values
+            config[:args] = [emailJob.id, emailJob.from, emailJob.to]
             res = Resque.set_schedule(emailJob.job_name, config)
             if res
               emailJob.job_status_scheduled!
@@ -92,7 +95,7 @@ class EmailJobController < ApplicationController
             success = true
           end
       end
-    rescue ActiveRecord::RecordNotFound => e
+    rescue ActiveRecord::RecordNotFound, StandardError => e
       Rails.logger.error(e.record.errors)
       errors = e.record.errors
     end
@@ -135,5 +138,4 @@ class EmailJobController < ApplicationController
   ensure
     render json: errors.size > 0 ? {errors: errors}.merge!({success: success}) : {success: success}
   end
-
 end

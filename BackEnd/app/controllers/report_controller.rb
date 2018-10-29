@@ -14,14 +14,7 @@ class ReportController < ApplicationController
   EMPTY_VALUE = ''
   MONTH_COUNT_FOR_ONE_YEAR = 12
   EXPENSE_COST_FORMAT_STRING = '%.2f'
-  MONTH_INCOME_WORKSHEET_START_COL = 0
-  MONTH_INCOME_OTHERA_CATEGORY_LABEL = 'Other'.downcase
-  MONTH_INCOME_TAX_YEAR_ANCHOR = 'Tax Year:'.downcase
-  MONTH_INCOME_ANCHOR = 'Income'.downcase
-  MONTH_INCOME_PROPERTY_OWNER_ANCHOR = 'Rental Property Income Expense Statement For:'.downcase
-  MONYH_INCOME_PROPERTY_ADDRESS_ANCHOR = 'Property Address:'.downcase
-  EXPENSE_OUTGOING_START_ANCHOR = 'Expenses'.downcase
-  EXPENSE_OUTGOING_STOP_ANCHOR = 'Total Expenses'.downcase
+  MONTH_INCOME_OTHER_CATEGORY_LABEL = 'Other'.downcase
 
   class ReportParsingException < StandardError
   end
@@ -40,7 +33,7 @@ class ReportController < ApplicationController
 
     if @user
       #@report = generate_report(@user, @report_type)
-      UserMailer.with(receiver: @user).incoming_email.deliver_now
+      MonthlyReportMailer.with(receiver: @user).send_monthly_report_email.deliver_now
     end
 
     render json: {res: true}
@@ -89,7 +82,8 @@ class ReportController < ApplicationController
     return validationRes, errors
   end
 
-  def parse_customer_list(customerSheetData)
+  def parse_customer_list(customerSheet)
+    customerSheetData = customerSheet.sheet_data
     customerListRes = Array.new
     if customerSheetData && customerSheetData[0]
       tableColSize = customerSheetData[0].cells.size
@@ -119,7 +113,7 @@ class ReportController < ApplicationController
             customerListRes << {userFields: userFields, propertyFields: propertyFields, tenantFields: tenantFields, contractFields: contractFields}
           else
             Rails.logger.info(errors)
-            raise ReportParsingException.new("Parsing error at line (#{tableRowIdx + 1}): #{errors.reject!{|error| error.empty?}.to_s}")
+            raise ReportParsingException.new("Parsing error for sheet #{customerSheet.sheet_name} at line (#{tableRowIdx + 1}): #{errors.reject!{|error| error.empty?}.to_s}")
           end
         end
         tableRowIdx += 1
@@ -145,54 +139,57 @@ class ReportController < ApplicationController
       tenantFields = row[:tenantFields]
       contractFields = row[:contractFields]
 
-      ActiveRecord::Base.transaction do
-        user = User.where(email: userFields[:email]).first_or_create!(userFields)
-        userUpdates = diff_attrs_updates(user.attributes, userFields)
-        user.update(userUpdates) if !userUpdates.empty?
+      user = User.where(email: userFields[:email]).first_or_create!(userFields)
+      userUpdates = diff_attrs_updates(user.attributes, userFields)
+      user.update(userUpdates) if !userUpdates.empty?
 
-        tenant = user.tenants.where(tenant_email: tenantFields[:tenant_email]).first_or_create!(tenantFields)
-        tenantUpdates = diff_attrs_updates(tenant.attributes, tenantFields)
-        tenant.update(tenantUpdates) if !tenantUpdates.empty?
+      tenant = user.tenants.where(tenant_email: tenantFields[:tenant_email]).first_or_create!(tenantFields)
+      tenantUpdates = diff_attrs_updates(tenant.attributes, tenantFields)
+      tenant.update(tenantUpdates) if !tenantUpdates.empty?
 
-        property = user.properties.where(address: propertyFields[:address], lot: propertyFields[:lot]).first_or_create!(propertyFields)
-        propertyUpdates = diff_attrs_updates(property.attributes, propertyFields)
-        tenant.update(propertyUpdates) if !propertyUpdates.empty?
+      property = user.properties.where(address: propertyFields[:address], lot: propertyFields[:lot]).first_or_create!(propertyFields)
+      propertyUpdates = diff_attrs_updates(property.attributes, propertyFields)
+      tenant.update(propertyUpdates) if !propertyUpdates.empty?
 
-        expireDate = contractFields[:expire_date]
-        user.renting_contracts.where(tenant_id: tenant.id).update(property_id: property.id, expire_date: DateTime.strptime(expireDate))
-      end
+      expireDate = contractFields[:expire_date]
+      user.renting_contracts.where(tenant_id: tenant.id).update(property_id: property.id, expire_date: DateTime.strptime(expireDate))
     end
   end
 
   def persist_monthly_report_data(monthlyReportList)
     #{propertyOwner: propertyOwner, propertyAddress: propertyAddress, expenses: expenses}
-    ActiveRecord::Base.transaction do
-      monthlyReportList.each do |row|
-        propertyOwner = row[:propertyOwner]
-        propertyAddress = row[:propertyAddress]
-        expenses = row[:expenses]
+    monthlyReportList.each do |row|
+      propertyOwner = row[:propertyOwner]
+      propertyAddress = row[:propertyAddress]
+      expenses = row[:expenses]
 
-        Property.where(address: propertyAddress).each do |property|
-          if property.user.name.downcase == propertyOwner.downcase
-              expenses.each do |expense|
-                expense[:property_id] = property.id
-                Expense.new(expense).save!
-              end
-            break
-          end
+      Property.where(address: propertyAddress).each do |property|
+        if property.user.name.downcase == propertyOwner.downcase
+            expenses.each do |expense|
+              e = property.expenses.where(date: expense[:date], is_cost: expense[:is_cost],
+                                      category: expense[:category]).first_or_create!(expense.merge({property_id: property.id}))
+              e.update(cost: expense[:cost]) if e.cost != expense[:cost]
+            end
+          break
         end
       end
     end
   end
 
-  def findIndexByAnchor(dataSheet, anchor, x = -1, y = -1, mode = 1)
-    if x != -1 && y != -1
-      if dataSheet[x] && dataSheet[x][y]
-        return [x, y] if matchAnchor(readValue(dataSheet[x][y].value), anchor, mode)
+  def findIndexByAnchor(dataSheet, anchor, r = -1, c = -1, mode = 1)
+    if r != -1 && c != -1
+      if dataSheet[r] && dataSheet[r][c]
+        return [r, c] if matchAnchor(readValue(dataSheet[r][c].value), anchor, mode)
       end
     end
-    return [x, findIndexByAnchorX(dataSheet, anchor, x, mode)] if x != -1
-    return [findIndexByAnchorY(dataSheet, anchor, y, mode), y] if y != -1
+
+    rowLimit = (r != -1 ? [r, dataSheet.size].min : dataSheet.size)
+    rowLimit.times do |idx|
+      colLimit = (c != -1 ? [c, dataSheet[idx].cells.size].min : dataSheet[idx].cells.size)
+      (colLimit + 1).times do |idy|
+        return [idx, idy] if matchAnchor(readValue(dataSheet[idx][idy].value), anchor, mode)
+      end
+    end
     return [-1, -1]
   end
 
@@ -204,24 +201,6 @@ class ReportController < ApplicationController
       return true if value.downcase.index(anchor) != -1
     end
     return false
-  end
-
-  def findIndexByAnchorX(dataSheet, anchor, xIndex, mode)
-    return -1 if dataSheet[xIndex].nil?
-    dataSheet[xIndex].cells.size.times do |yIndex|
-      value = readValue(dataSheet[xIndex][yIndex].value)
-      return yIndex if matchAnchor(value, anchor, mode)
-    end
-    return -1
-  end
-
-  def findIndexByAnchorY(dataSheet, anchor, yIndex, mode)
-    dataSheet.size.times do |xIndex|
-      next if dataSheet[xIndex][yIndex].nil?
-      value = readValue(dataSheet[xIndex][yIndex].value)
-      return xIndex if matchAnchor(value, anchor, mode)
-    end
-    return -1
   end
 
   def costToDecimal(costStr)
@@ -243,67 +222,74 @@ class ReportController < ApplicationController
     return resArray
   end
 
-  def parse_monthly_report(monthlyDataSheet)
-    expenses = Array.new
+  def get_index_by_rule(monthlyDataSheet, rule)
+    index = findIndexByAnchor(monthlyDataSheet, rule[:anchorText].downcase, rule[:rowIndex], rule[:colIndex])
+    raise ReportParsingException.new("No anchor found within the given index! Rule: #{rule[:description]}") if index == [-1, -1]
+    return index
+  end
 
-    if monthlyDataSheet
-      taxYearIndex = findIndexByAnchor(monthlyDataSheet, MONTH_INCOME_TAX_YEAR_ANCHOR, -1, MONTH_INCOME_WORKSHEET_START_COL)
-      taxYear = readValue(monthlyDataSheet[taxYearIndex[0]][MONTH_INCOME_WORKSHEET_START_COL].value).gsub(/\D/, EMPTY_VALUE) if taxYearIndex[0] != -1
-
-      propertyOwnerIndex = findIndexByAnchor(monthlyDataSheet, MONTH_INCOME_PROPERTY_OWNER_ANCHOR, -1, MONTH_INCOME_WORKSHEET_START_COL)
-      propertyOwner = EMPTY_VALUE
-      if propertyOwnerIndex[0] != -1 && monthlyDataSheet[propertyOwnerIndex[0] + 1] && monthlyDataSheet[propertyOwnerIndex[0] + 1][MONTH_INCOME_WORKSHEET_START_COL]
-        propertyOwner = readValue(monthlyDataSheet[propertyOwnerIndex[0] + 1][MONTH_INCOME_WORKSHEET_START_COL].value)
-      end
-
-      propertyAddressIndex = findIndexByAnchor(monthlyDataSheet, MONYH_INCOME_PROPERTY_ADDRESS_ANCHOR, -1, MONTH_INCOME_WORKSHEET_START_COL)
-      propertyAddress = EMPTY_VALUE
-      if propertyAddressIndex[0] != -1 && monthlyDataSheet[propertyAddressIndex[0] + 1] && monthlyDataSheet[propertyAddressIndex[0] + 1][MONTH_INCOME_WORKSHEET_START_COL]
-        propertyAddress = readValue(monthlyDataSheet[propertyAddressIndex[0] + 1][MONTH_INCOME_WORKSHEET_START_COL].value).gsub(/^[0-9]*\)\s+/,EMPTY_VALUE)
-      end
-
-      Rails.logger.debug("Tax Year pos: #{taxYearIndex}, Owner pos: #{propertyOwnerIndex}, Address pos: #{propertyAddressIndex}")
-      Rails.logger.debug("Tax Year: #{taxYear}, Owner: #{propertyOwner}, Address: #{propertyAddress}")
-
-      # Read incoming expenses
-      incomingExpensesAnchor = findIndexByAnchor(monthlyDataSheet, MONTH_INCOME_ANCHOR, -1, MONTH_INCOME_WORKSHEET_START_COL)
-      if incomingExpensesAnchor[0] != -1
-        if !monthlyDataSheet[incomingExpensesAnchor[0]].nil?
-          category = readValue(monthlyDataSheet[incomingExpensesAnchor[0]][0].value)
-          incomingExpenses = parse_single_row_expense(monthlyDataSheet[incomingExpensesAnchor[0]], taxYear, category,false)
-          incomingExpenses.each do |expenseData|
-            #Rails.logger.debug("Incoming Expense Data: #{expenseData}")
-            expenses << expenseData
-          end
-        end
-      else
-        Rails.logger.info("#{MONTH_INCOME_ANCHOR} ANCHOR not found!");
-      end
-
-      # Read outgoing expenses
-      expenseStartIndex = findIndexByAnchor(monthlyDataSheet, EXPENSE_OUTGOING_START_ANCHOR, -1, MONTH_INCOME_WORKSHEET_START_COL)
-      expenseStopIndex = findIndexByAnchor(monthlyDataSheet, EXPENSE_OUTGOING_STOP_ANCHOR, -1, MONTH_INCOME_WORKSHEET_START_COL)
-
-      Rails.logger.debug("Expense start pos: #{expenseStartIndex}, Expense stop pos: #{expenseStopIndex}")
-
-      otherCategoryCount = 1
-      if expenseStartIndex[0] != -1 && expenseStopIndex[0] != -1
-        (expenseStartIndex[0] + 1..expenseStopIndex[0] - 1).each do |rowIndex|
-          if !monthlyDataSheet[rowIndex].nil?
-            category = readValue(monthlyDataSheet[rowIndex][0].value)
-           if category.downcase == MONTH_INCOME_OTHERA_CATEGORY_LABEL
-             category += otherCategoryCount.to_s
-             otherCategoryCount += 1
-           end
-            outgoingExpenses = parse_single_row_expense(monthlyDataSheet[rowIndex], taxYear, category,true)
-            outgoingExpenses.each do |expenseData|
-              #Rails.logger.debug("Outgoing Expense Data: #{expenseData}")
-              expenses << expenseData
-            end
-          end
-        end
+  def read_value_by_rule(monthlyDataSheet, rule, index)
+    if rule[:valuePos]
+      x = rule[:valuePos][:x] || 0
+      if monthlyDataSheet[index[0] + x]
+        y = rule[:valuePos][:y] || 0
+        return readValue(monthlyDataSheet[index[0] + x][index[1] + y].value) if monthlyDataSheet[index[0] + x][index[1] + y]
       end
     end
+    raise ReportParsingException.new("Parsing error! Can not read value by rule #{rule[:description]}")
+  end
+
+  def parse_monthly_report(monthlySheet)
+    monthlySheetData = monthlySheet.sheet_data
+    expenses = Array.new
+    rules = ReportHelper.get_excel_rules
+    raise ReportParsingException.new("Parsing error! No parsing rule file found with filename #{ReportHelper::EXCEL_PARSING_RULES_FILENAME}") if rules.nil?
+
+    taxYearRule = rules[:taxYearRule]
+    taxYearIndex = get_index_by_rule(monthlySheetData, taxYearRule)
+    taxYear = read_value_by_rule(monthlySheetData, taxYearRule, taxYearIndex).gsub(/\D/, EMPTY_VALUE)
+
+    propertyOwnerRule = rules[:propertyOwnerRule]
+    propertyOwnerIndex = get_index_by_rule(monthlySheetData, propertyOwnerRule)
+    propertyOwner = read_value_by_rule(monthlySheetData, propertyOwnerRule, propertyOwnerIndex)
+
+    propertyAddressRule = rules[:propertyAddressRule]
+    propertyAddressIndex = get_index_by_rule(monthlySheetData, propertyAddressRule)
+    propertyAddress = read_value_by_rule(monthlySheetData, propertyAddressRule, propertyAddressIndex).gsub(/^[0-9]*\)\s+/, EMPTY_VALUE)
+
+    expenseStartRule = rules[:expenseStartRule]
+    expenseStartIndex = get_index_by_rule(monthlySheetData, expenseStartRule)
+
+    expenseStopRule = rules[:expenseStopRule]
+    expenseStopIndex = get_index_by_rule(monthlySheetData, expenseStopRule)
+
+    incomeRule = rules[:incomeRule]
+    incomeIndex = get_index_by_rule(monthlySheetData, incomeRule)
+    incomeCategory = read_value_by_rule(monthlySheetData, incomeRule, incomeIndex)
+
+    Rails.logger.debug("Tax Year pos: #{taxYearIndex}, Owner pos: #{propertyOwnerIndex}, Address pos: #{propertyAddressIndex}")
+    Rails.logger.debug("Tax Year: #{taxYear}, Owner: #{propertyOwner}, Address: #{propertyAddress}")
+    Rails.logger.debug("Income pos: #{incomeIndex}, Expense start pos: #{expenseStartIndex}, Expense stop pos: #{expenseStopIndex}")
+
+    # Read incoming expenses
+    incomingExpenses = parse_single_row_expense(monthlySheetData[incomeIndex[0]], taxYear, incomeCategory,false)
+    Rails.logger.info("IncomingExpense size: #{incomingExpenses.size}")
+    Rails.logger.info("IncomingExpense: #{incomingExpenses}")
+    incomingExpenses.each { |expenseData| expenses << expenseData }
+
+    # Read outgoing expenses
+    otherCategoryCount = 1
+    (expenseStartIndex[0] + 1..expenseStopIndex[0] - 1).each do |rowIndex|
+      category = readValue(monthlySheetData[rowIndex][0].value)
+      if category.downcase == MONTH_INCOME_OTHER_CATEGORY_LABEL
+        category += otherCategoryCount.to_s
+        otherCategoryCount += 1
+      end
+      outgoingExpenses = parse_single_row_expense(monthlySheetData[rowIndex], taxYear, category,true)
+      outgoingExpenses.each { |expenseData| expenses << expenseData }
+    end
+    Rails.logger.info("expenses size: #{expenses.size}")
+    Rails.logger.info("expenses: #{expenses}")
     return {propertyOwner: propertyOwner, propertyAddress: propertyAddress, expenses: expenses}
   end
 
@@ -351,9 +337,9 @@ class ReportController < ApplicationController
           workbook.worksheets.each do |sheet|
             sheetName = sheet.sheet_name.strip.downcase
             if sheetName == CUSTOMER_LIST_SHEET_NAME
-              customerList += parse_customer_list(sheet.sheet_data)
+              customerList += parse_customer_list(sheet)
             elsif sheetName.start_with?(PROPERTY_INCOME_SHEET_NAME_PREFIX)
-              monthlyReportList << parse_monthly_report(sheet.sheet_data)
+              monthlyReportList << parse_monthly_report(sheet)
             end
           end
           successReport << File.basename(r)
@@ -362,24 +348,27 @@ class ReportController < ApplicationController
         Rails.logger.debug("Parsed monthly report list: #{monthlyReportList}")
         Rails.logger.debug("Suceeded parsing list: #{successReport}")
 
-        persist_customer_list_data(customerList) if !customerList.empty?
-        persist_monthly_report_data(monthlyReportList) if !monthlyReportList.empty?
+        ActiveRecord::Base.transaction do
+          persist_customer_list_data(customerList) if !customerList.empty?
+          persist_monthly_report_data(monthlyReportList) if !monthlyReportList.empty?
+        end
+
+      # if parsing process succeed
+      report.update(parsed: true)
+      respondJson['parseSuccess'] = true
 
       rescue ReportParsingException => e
-        Rails.logger.debug('ReportParsingException raised!')
+        Rails.logger.error("ReportParsingException raised! #{e.to_s}")
         respondJson['parseSuccess'] = false
         respondJson['errorMsg'] = e.message
-
-        render json: respondJson
       ensure
         if extractDirectory && extractDirectory.start_with?(fileDirectory)
           FileUtils.rm_rf(extractDirectory)
           Rails.logger.debug("Temp extracted directory removed at #{extractDirectory}")
         end
       end
-      # if parsing process succeed
-      report.update(parsed: true)
-      respondJson['parseSuccess'] = true
+    else
+      respondJson[:error] = "Report with id #{params[:id]} not found!"
     end
     render json: respondJson
   end

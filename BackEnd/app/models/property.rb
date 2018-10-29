@@ -1,6 +1,6 @@
 class Property < ApplicationRecord
   belongs_to :user
-  has_many :expenses
+  has_many :expenses, dependent: :delete_all
 
   def findExpensesBetween(startDateTime, endDateTime, groupBy)
     s = startDateTime

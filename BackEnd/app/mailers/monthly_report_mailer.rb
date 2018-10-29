@@ -1,20 +1,20 @@
-class UserMailer < ApplicationMailer
+class MonthlyReportMailer < ApplicationMailer
 
   DEFAULT_SUBJECT = "Monthly Incoming & Expense Report for"
   INCOME_LABEL = 'Income'.downcase
   NOT_AVAILABLE = 'N/A'
   IMAGE_CHART_BASE_URL = 'https://image-charts.com/chart?'
   IMAGE_SIZE = '250x250'
-  DEFAULT_FROM = '<DO_NOT_REPLY>AutoSender_yikai@diqiu.com'
 
   # Mail configuration
   after_action :set_email_configuration
   helper_method :costValueToStr
 
-  def incoming_email(from, to, date)
-    dt = date.to_datetime
+  def send_monthly_report_email(from, to, date)
+    dt = date
     Rails.logger.info(dt)
     @receiver = User.find_by!(email: from)
+
     @month = dt.month
     @year = dt.year
     temp = Hash.new
