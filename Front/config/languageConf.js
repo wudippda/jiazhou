@@ -8,6 +8,7 @@ var lan = {
             parsingPage: 'Parsing',
             housePage: 'Houses',
             emailSettingPage: 'Email',
+            emailJobPage: 'Email Job',
             logOut: 'Logout'
         },
         EmailSettingPage: {
@@ -85,6 +86,7 @@ var lan = {
             parsingPage: '解析中心',
             housePage: '房屋信息',
             emailSettingPage: '邮件配置',
+            emailJobPage: '邮件任务',
             logOut: '登出'
         },
         EmailSettingPage: {

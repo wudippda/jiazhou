@@ -19,6 +19,10 @@
                         <Icon type="ios-email"></Icon>
                         <span>{{lanDisplay[languageType]['SiderBar']['emailSettingPage']}}</span>
                     </MenuItem>
+                    <MenuItem name="emailJobPage">
+                        <Icon type="android-alarm-clock"></Icon>
+                        <span>{{lanDisplay[languageType]['SiderBar']['emailJobPage']}}</span>
+                    </MenuItem>
                     <MenuItem name="logout" class="logout-item">
                         <Icon type="log-out"></Icon>
                         <span>{{lanDisplay[languageType]['SiderBar']['logOut']}}</span>
@@ -103,6 +107,10 @@ export default {
                     this.activeName = 'emailSettingPage'
                     this.$router.push({name: 'emailSetting', params: {lan: this.languageType}})
                     break
+                case 'emailJobPage':
+                    this.activeName = 'emailJobPage'
+                    this.$router.push({name: 'emailJobPage', params: {lan: this.languageType}})
+                    break
                 case 'parsingPage':
                     this.activeName = 'parsingPage'
                     this.$router.push({name: 'parsingPage', params: {lan: this.languageType}})
@@ -127,6 +135,9 @@ export default {
                 break
             case 'emailSetting':
                 this.activeName = 'emailSettingPage'
+                break
+            case 'emailJobPage':
+                this.activeName = 'emailJobPage'
                 break
             case 'parsingPage':
                 this.activeName = 'parsingPage'

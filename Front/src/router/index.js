@@ -6,6 +6,7 @@ import Dashboard from '@/components/DashboardPage'
 import HousePage from '@/components/HousePage'
 import EmailSettingPage from '@/components/EmailSettingPage'
 import ParsingPage from '@/components/ParsingPage'
+import EmailJobPage from '@/components/EmailJobPage'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
                     path: '/parsingPage/:lan',
                     name: 'parsingPage',
                     component: ParsingPage
+                },
+                {
+                    path: '/emailJobPage/:lan',
+                    name: 'emailJobPage',
+                    component: EmailJobPage
                 }
             ]
         }
