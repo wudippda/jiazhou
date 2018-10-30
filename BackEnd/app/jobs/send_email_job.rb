@@ -38,16 +38,18 @@ class SendEmailJob
     lockFilePath = File.join(JOB_LOCK_DIR, ".job_lck_#{jobId.to_s}")
     self.create_lock_file(lockFilePath, jobId)
 
-    executionHistory = @emailJob.email_job_histories.create({execution_time: DateTime.now})
+    executionHistory = @emailJob.email_job_histories.create!({execution_time: DateTime.now})
     sendRes = {success_to: 0, fail_to: 0, total_to: 0,
-               success_to_list: Array.new, fail_to_list: Array.new}
+               success_to_list: Array.new, fail_to_list: Array.new, fail_errors: ''}
 
     tos = to.split(EMAIL_SEPARATOR)
     sendRes[:total_to] = tos.size
+    now = DateTime.now
+    date = DateTime.strptime("#{now.month}/#{now.year}", ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
     tos.each do |t|
       begin
-        # Send monthly report based on the current month
-        MonthlyReportMailer.send_monthly_report_email(from, to, DateTime.now).deliver_now
+        # Send monthly report for current month
+        MonthlyReportMailer.monthly_report_email(from, to, date).deliver_now
         sendRes[:success_to] += 1
         sendRes[:success_to_list] << t
       rescue StandardError => e
@@ -56,18 +58,31 @@ class SendEmailJob
         Resque.logger.error("Error occurs when sending email to #{t}.")
         sendRes[:fail_to] += 1
         sendRes[:fail_to_list] << t
-        #sendRes[:error] = e.to_s
+        sendRes[:fail_errors] += "#{e.to_s};"
       end
     end
+    updateHistory(executionHistory, sendRes)
   ensure
-    executionHistory.update(sendRes)
-    if sendRes[:fail_to] == 0 && sendRes[:success_to] == sendRes[:total_to]
-      executionHistory.job_history_status_success!
-    else
-      executionHistory.job_history_status_fail!
-    end
-    self.delete_lock_file(lockFilePath)
-    Resque.logger.info("Recover old status: #{@oldStatus}")
     @emailJob.update(job_status: @oldStatus)
+    delete_lock_file(lockFilePath)
+    updateNextExecutionTime
+  end
+
+  def self.updateNextExecutionTime
+    if @emailJob.job_type_schedule? && !@emailJob.config.nil?
+      config = JSON.parse(@emailJob.config).symbolize_keys
+      @emailJob.update(next_time: Rufus::Scheduler.parse(config[:cron]).next_time) if config[:cron]
+    elsif @emailjob.job_type_now?
+      @emailJob.update(next_time: nil)
+    end
+  end
+
+  def self.updateHistory(history, res)
+    history.update(res)
+    if res[:fail_to] == 0 && res[:success_to] == res[:total_to]
+      history.job_history_status_success!
+    else
+      history.job_history_status_fail!
+    end
   end
 end

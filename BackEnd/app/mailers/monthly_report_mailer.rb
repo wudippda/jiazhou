@@ -6,17 +6,22 @@ class MonthlyReportMailer < ApplicationMailer
   IMAGE_CHART_BASE_URL = 'https://image-charts.com/chart?'
   IMAGE_SIZE = '250x250'
 
+  class ExpenseMissingException < StandardError
+  end
+
   # Mail configuration
   after_action :set_email_configuration
   helper_method :costValueToStr
 
-  def send_monthly_report_email(from, to, date)
+  def monthly_report_email(from, to, date)
     dt = date
-    Rails.logger.info(dt)
+    Rails.logger.debug("Date passed: #{dt}")
     @receiver = User.find_by!(email: from)
 
     @month = dt.month
     @year = dt.year
+    Rails.logger.debug("Year: #{@year}, Month: #{@month}")
+
     temp = Hash.new
     @expenses = Hash.new
 
@@ -24,7 +29,8 @@ class MonthlyReportMailer < ApplicationMailer
     @receiver.properties.each {|property| temp.merge!(property.findExpensesBetween(dt, dt, :category)){|key, oldval, newval| newval + oldval}}
     temp.each { |key, value| @expenses[key] = value.group_by{ |e| e.property_id } }
 
-    Rails.logger.info(@expenses)
+    Rails.logger.debug(@expenses)
+    raise ExpenseMissingException.new("Can not find any expense for user #{from} within #{dt}") if @expenses.empty?
 
     @totalIncomes = 0
     @outgoingSubtotal = Hash[@propertyIds.map {|x| [x, 0]}]
@@ -52,18 +58,17 @@ class MonthlyReportMailer < ApplicationMailer
     chdl = Array.new
     chl = Array.new
     chd = Array.new
-    Rails.logger.info(expenses)
     expenses.each do |key, value|
       if key.downcase == INCOME_LABEL
         chdl = value.collect { |nv| "Property #{nv.property_id}" }.join('|')
         chl = value.collect { |nv| nv.cost }
         totalIncome = chl.inject(0, :+)
-        chd = chl.collect { |nv| nv.to_f / totalIncome}.join(',')
+        chd = chl.collect { |nv| nv.to_f / totalIncome }.join(',')
         chl = chl.collect { |nv| costValueToStr(nv) }.join('|')
         break
       end
     end
-    return "#{IMAGE_CHART_BASE_URL}chs=#{IMAGE_SIZE}&chd=t:#{chd}&cht=pd&chl=#{chl}&chdl=#{chdl}"
+    return chd.include?('NaN') ? "" : "#{IMAGE_CHART_BASE_URL}chs=#{IMAGE_SIZE}&chd=t:#{chd}&cht=pd&chl=#{chl}&chdl=#{chdl}"
   end
 
   def generateExpenseChart(expenses)
@@ -87,7 +92,7 @@ class MonthlyReportMailer < ApplicationMailer
     chdl = chdl.join('|').gsub('&', 'and')
     chl = total.values.collect!{ |v| "#{costValueToStr(v)}" }.join('|')
 
-    return "#{IMAGE_CHART_BASE_URL}chs=#{IMAGE_SIZE}&chd=t:#{chd}&cht=pd&chl=#{chl}&chdl=#{chdl}"
+    return (chd.empty? || chdl.empty? || chl.empty?) ? "" : "#{IMAGE_CHART_BASE_URL}chs=#{IMAGE_SIZE}&chd=t:#{chd}&cht=pd&chl=#{chl}&chdl=#{chdl}"
   end
 
   def generate_subject

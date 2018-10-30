@@ -9,7 +9,6 @@ class EmailJob < ApplicationRecord
   validates :from, format: { with: URI::MailTo::EMAIL_REGEXP, message: "'%{value}' is not a valid email format" }
   validates :job_type, inclusion: { in: EmailJob::job_types.keys, message: "%{value} is not a valid job_type for email job" }
   validates :job_status, inclusion: { in: EmailJob::job_statuses.keys, message: "%{value} is not a valid status for email job" }
-  #validates :repeat_time, numericality: { only_integer: true }
   validates :job_name, uniqueness: true
 
 end

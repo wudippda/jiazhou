@@ -9,15 +9,13 @@ class EmailJobController < ApplicationController
     errors = Hash.new
 
     ActiveRecord::Base.transaction do
-      #report_start = DateTime.strptime(params[:report_start], ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
-      #report_end = DateTime.strptime(params[:report_end], ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
       emailJob = EmailJob.create!({job_name: params[:job_name], from: params[:from], to: params[:to], job_type: params[:job_type], config: params[:config]})
       emailJob.job_status_idle!
     end
     success = true
   rescue ActiveRecord::RecordInvalid, ArgumentError => e
-    Rails.logger.error(e.record.errors)
-    errors = e.record.errors
+    Rails.logger.error(e.message)
+    errors = e.message
   ensure
     render json: errors.size > 0 ? {errors: errors}.merge!({success: success}) : {success: success}
   end
@@ -60,7 +58,6 @@ class EmailJobController < ApplicationController
     begin
       emailJob = EmailJob.find_by!(id: params[:id])
       scheduleConfig = JSON.parse(emailJob.config).symbolize_keys
-
       case emailJob.job_type.downcase
         when EmailJob.job_types[:schedule]
           if scheduleConfig[:cron].nil?
@@ -70,34 +67,46 @@ class EmailJobController < ApplicationController
           else
             repeatParams = Hash.new
             repeatParams[:first_in] = scheduleConfig[:first_in] || '1s'
+
             # last_at takes more priority than times
-            if scheduleConfig[:last_at]
-              repeatParams[:last_at] = Time.now + 190 * 1
+            if scheduleConfig[:last_in]
+              repeatParams[:last_in] = scheduleConfig[:last_in]
             else
               repeatParams[:times] = scheduleConfig[:times].to_i if scheduleConfig[:times]
             end
 
-            config[:cron] = [scheduleConfig[:cron], repeatParams]
+            if !scheduleConfig[:time_zone].nil?
+              tz = ActiveSupport::TimeZone::MAPPING[scheduleConfig[:time_zone]]
+              scheduleConfig[:cron] = "#{scheduleConfig[:cron]} #{tz}" if !tz.nil?
+            end
+
+            config[:cron] = scheduleConfig[:cron]
             config[:class] = SendEmailJob.name
             config[:persist] = true
             config[:args] = [emailJob.id, emailJob.from, emailJob.to]
             res = Resque.set_schedule(emailJob.job_name, config)
             if res
               emailJob.job_status_scheduled!
+              emailJob.update(next_time: Rufus::Scheduler.parse(config[:cron]).to_s.to_datetime)
+              # Rails.logger.info("Next time: #{DateTime.parse(Rufus::Scheduler.parse(config[:cron]).to_s)}")
+              # Rails.logger.info("Next time: #{Rufus::Scheduler.parse(config[:cron]).to_s.gsub(' ', '').to_datetime}")
+              Rails.logger.info("Next time: #{Rufus::Scheduler.parse(config[:cron]).next_time.to_s}")
               success = true
             end
           end
         when EmailJob.job_types[:now]
           # run as one-shot resque job
           if emailJob.job_status_idle?
-            Resque.enqueue(SendEmailJob, jobId, User.find_by(email: emailJob.email), emailJob.to,
-                         emailJob.report_start, emailJob.report_end)
+            Resque.enqueue(SendEmailJob, jobId, User.find_by(email: emailJob.email), emailJob.to)
             success = true
           end
       end
-    rescue ActiveRecord::RecordNotFound, StandardError => e
+    rescue ActiveRecord::RecordNotFound => e
       Rails.logger.error(e.record.errors)
       errors = e.record.errors
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      errors = e.message
     end
     render json: errors.size > 0 ? {errors: errors}.merge!({success: success}) : {success: success}
   end
