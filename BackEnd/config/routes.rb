@@ -2,7 +2,6 @@ Rails.application.routes.draw do
 
   # Report route
   get 'report/index'
-  #post 'report/send_email' => "report#send_email"
   get 'report/parse_report/:id' => "report#parse_report"
   get 'report/find_expenses' => "report#find_expenses"
   get 'report/send_report/:id' => 'report#send_report'

@@ -1,6 +1,6 @@
 rails_env   = ENV['RAILS_ENV']  || "development"
 rails_root  = ENV['RAILS_ROOT'] || File.dirname(__FILE__) + '/..'
-num_workers = 3
+num_workers = 1
 
 num_workers.times do |num|
   God.watch do |w|

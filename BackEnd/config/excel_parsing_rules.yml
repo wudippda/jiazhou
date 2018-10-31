@@ -1,0 +1,49 @@
+taxYearRule:
+  description: "Rule that used to locate the 'taxYear' field"
+  anchorText: "tax year:"
+  rowIndex: -1
+  colIndex: 0
+  valuePos:
+    x: 0
+    y: 0
+
+propertyOwnerRule:
+  description: "Rule that used to locate the 'property owner' field"
+  anchorText: "rental property income expense statement for:"
+  rowIndex: -1
+  colIndex: 0
+  valuePos:
+      x: 1
+      y: 0
+
+propertyAddressRule:
+  description: "Rule that used to locate the 'property address' field"
+  anchorText: "property address:"
+  rowIndex: -1
+  colIndex: 0
+  valuePos:
+      x: 1
+      y: 0
+
+expenseStartRule:
+  description: "Rule that used to locate the start of 'expense' field"
+  anchorText: "expenses"
+  rowIndex: -1
+  colIndex: 0
+
+expenseStopRule:
+  description: "Rule that used to locate the end of 'expense' field"
+  anchorText: "total expenses"
+  rowIndex: -1
+  colIndex: 0
+
+incomeRule:
+  description: "Rule that used to locate the 'Income' field"
+  anchorText: "Income"
+  rowIndex: -1
+  colIndex: 0
+  valuePos:
+      x: 0
+      y: 0
+
+

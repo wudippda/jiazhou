@@ -491,11 +491,11 @@ Pie Chart</span></span></div>
                 <table align="left" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                   <tbody><tr>
                     <td class="mcnImageGroupContent" valign="top" style="padding-left: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-
-
-                      <img alt="" src="<%= raw @expensePieChartUrl %>" width="264" style="max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
-
-
+                      <% if @expensePieChartUrl.size == 0 %>
+                        <%= image_tag('no_image.png', style: 'max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;', class: 'mcnImage', width: '264')%>
+                      <% else %>
+                        <img alt="" src="<%= raw @expensePieChartUrl %>" width="264" style="max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+                      <% end %>
                     </td>
                   </tr>
                   </tbody></table>
@@ -503,11 +503,11 @@ Pie Chart</span></span></div>
                 <table align="right" width="273" border="0" cellpadding="0" cellspacing="0" class="mcnImageGroupContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                   <tbody><tr>
                     <td class="mcnImageGroupContent" valign="top" style="padding-right: 9px;padding-top: 0;padding-bottom: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-
-
-                      <img alt="" src="<%= raw @propertyIncomePieChartUrl %>" width="264" style="max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
-
-
+                      <% if @propertyIncomePieChartUrl.size == 0 %>
+                        <%= image_tag('no_image.png', style: 'max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;', class: 'mcnImage', width: '264')%>
+                      <% else %>
+                        <img alt="" src="<%= raw @propertyIncomePieChartUrl %>" width="264" style="max-width: 456px;padding-bottom: 0;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage">
+                      <% end %>
                     </td>
                   </tr>
                   </tbody></table>

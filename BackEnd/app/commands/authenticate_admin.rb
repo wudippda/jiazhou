@@ -11,7 +11,6 @@ class AuthenticateAdmin
   end
 
   private
-
   attr_accessor :email, :password
 
   def admin
