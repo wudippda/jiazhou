@@ -69,9 +69,16 @@ class SendEmailJob
   end
 
   def self.updateNextExecutionTime
-    if @emailJob.job_type_schedule? && !@emailJob.config.nil?
+    if @emailJob.job_type_schedule?
       config = JSON.parse(@emailJob.config).symbolize_keys
-      @emailJob.update(next_time: Rufus::Scheduler.parse(config[:cron]).next_time) if config[:cron]
+      if !@emailJob.config.nil? && config[:cron]
+        timeFormat = ApplicationHelper::EOTIME_DATE_FORMAT_STRING
+        nextTime = DateTime.strptime(Rufus::Scheduler.parse(config[:cron]).next_time.to_s, timeFormat)
+        nextTime = nextTime.in_time_zone(ActiveSupport::TimeZone::MAPPING[scheduleConfig[:time_zone]]) if scheduleConfig[:time_zone]
+        @emailJob.update(next_time: nextTime)
+      else
+        Rails.logger.error("No 'cron' config found for job #{@emailJob.id}")
+      end
     elsif @emailjob.job_type_now?
       @emailJob.update(next_time: nil)
     end

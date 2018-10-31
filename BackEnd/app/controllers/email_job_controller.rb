@@ -87,10 +87,12 @@ class EmailJobController < ApplicationController
             res = Resque.set_schedule(emailJob.job_name, config)
             if res
               emailJob.job_status_scheduled!
-              emailJob.update(next_time: Rufus::Scheduler.parse(config[:cron]).to_s.to_datetime)
-              # Rails.logger.info("Next time: #{DateTime.parse(Rufus::Scheduler.parse(config[:cron]).to_s)}")
-              # Rails.logger.info("Next time: #{Rufus::Scheduler.parse(config[:cron]).to_s.gsub(' ', '').to_datetime}")
-              Rails.logger.info("Next time: #{Rufus::Scheduler.parse(config[:cron]).next_time.to_s}")
+              Rails.logger.debug("config[:cron] value: #{config[:cron]}")
+              timeFormat = ApplicationHelper::EOTIME_DATE_FORMAT_STRING
+              nextTime = DateTime.strptime(Rufus::Scheduler.parse(config[:cron]).next_time.to_s, timeFormat)
+              nextTime = nextTime.in_time_zone(ActiveSupport::TimeZone::MAPPING[scheduleConfig[:time_zone]]) if scheduleConfig[:time_zone]
+              Rails.logger.debug("Next execution time: #{nextTime}")
+              emailJob.update(next_time: nextTime)
               success = true
             end
           end
@@ -98,6 +100,7 @@ class EmailJobController < ApplicationController
           # run as one-shot resque job
           if emailJob.job_status_idle?
             Resque.enqueue(SendEmailJob, jobId, User.find_by(email: emailJob.email), emailJob.to)
+            emailJob.update(next_time: DateTime.now)
             success = true
           end
       end
