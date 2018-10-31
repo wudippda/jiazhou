@@ -1,9 +1,5 @@
 class EmailJobController < ApplicationController
 
-  def job_name_exists?
-    return !EmailJob.find_by(job_name: params[:job_name]).nil?
-  end
-
   def create_email_job
     success = false
     errors = Hash.new
@@ -47,7 +43,21 @@ class EmailJobController < ApplicationController
 
   def list_email_job
     results =  EmailJob.all.order('created_at DESC').page(params[:page])
-    render json: {reports: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
+    render json: {jobs: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
+  end
+
+  def list_email_job_history
+    success = false
+    errors = Hash.new
+
+    begin
+      emailJob = EmailJob.find_by(id: params[:id])
+      results = emailJob.email_job_histories.all.order('created_at DESC').page(params[:page])
+    rescue ActiveRecord::RecordNotFound, StandardError => e
+      Rails.logger.error(e.message)
+      errors = e.message
+    end
+    render json: {histories: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
   end
 
   def start_email_job
