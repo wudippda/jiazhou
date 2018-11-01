@@ -8,7 +8,7 @@ class DetailListController < ApplicationController
   end
 
   def find_property_and_tenant_by_user
-    userId = params[:id]
+    userId = params[:userId]
     user = User.find_by(id: userId)
     if user
       properties = user.properties
@@ -30,7 +30,7 @@ class DetailListController < ApplicationController
     success = false
     startDate = params[:startDate]
     endDate = params[:endDate]
-    userId = params[:id]
+    userId = params[:userId]
 
     begin
       user = User.find_by!(id: userId)
