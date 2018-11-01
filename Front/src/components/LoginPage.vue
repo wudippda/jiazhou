@@ -4,7 +4,7 @@
         <Card class="login-card" v-if="mode === 'Login'">
             <div>
                 <!-- <img src="../assets/logo.svg" class="logo"> -->
-                <h1 style="font-size: 1.2em; color: white">数据平台登录</h1>
+                <h1 style="font-size: 1.2em; color: white">Login</h1>
                 <Form ref="loginFormValidation" :model="loginFormValidation" :rules="loginRuleValidation">
                     <FormItem prop="email" class="form-item">
                         <Input type="text" v-model="loginFormValidation.email" placeholder="Email">
@@ -17,10 +17,10 @@
                         </Input>
                     </FormItem>
                     <FormItem>
-                        <Button type="success" size="large" @click="handleSubmit('loginFormValidation')">登录</Button>
+                        <Button type="success" size="large" @click="handleSubmit('loginFormValidation')">Login</Button>
                     </FormItem>
                     <FormItem>
-                        <a class="register-tip" @click="swithMode('Register')">注册</a>
+                        <a class="register-tip" @click="swithMode('Register')">Register</a>
                     </FormItem>
                 </Form>
             </div>
@@ -52,10 +52,10 @@
                         </Input>
                     </FormItem>
                     <FormItem>
-                        <Button type="info" size="large" @click="handleSubmit('registerFormValidation')">注册</Button>
+                        <Button type="info" size="large" @click="handleSubmit('registerFormValidation')">Register</Button>
                     </FormItem>
                     <FormItem>
-                        <a class="register-tip" @click="swithMode('Login')">登录</a>
+                        <a class="register-tip" @click="swithMode('Login')">Login</a>
                     </FormItem>
                 </Form>
             </div>
@@ -65,12 +65,13 @@
 </template>
 
 <script>
-import { login,register, createUser, allocateDocker } from '../service/apis'
+import { login, register } from '../service/apis'
 var md5 = require('js-md5')
+
 export default {
     data () {
         return {
-            name: 'Login',
+            name: 'LoginPage',
             mode: 'Login',
             loginFormValidation: {
                 email: '',
