@@ -16,11 +16,22 @@
                             <p><Icon type="ios-clock"></Icon>&nbsp;<span>{{item.created_at}}</span></p>
                             <br>
                             <Collapse accordion v-model="currentHouse" v-if="item.properties !== undefined">
-                                <Panel :name="house.address" v-for="(house, index) in item.properties" :key="index" style="text-align: left">
-                                    {{house.address}} &nbsp; {{house.lot}}
+                                <Panel :name="info.property.address" v-for="(info, index) in item.properties" :key="index" style="text-align: left">
+                                    {{info.property.address}} &nbsp; {{info.property.lot}}
                                     <div slot="content" class="user-info">
-                                        <p><Icon type="ios-clock"></Icon>&nbsp;<span>{{house.created_at}}</span></p>
+                                        <p><Icon type="ios-clock"></Icon>&nbsp;&nbsp;<span>{{info.property.created_at}}</span></p>
                                         <br>
+                                        <Collapse accordion v-model="currentTenant" v-if="item.properties !== undefined">
+                                            <Panel :name="info.tenant.tenant_name">
+                                                {{info.tenant.tenant_name}}
+                                                <div slot="content" class="user-info">
+                                                    <p><Icon type="iphone"></Icon>&nbsp;<span>{{info.tenant.tenant_phone}}</span></p>
+                                                    <p><Icon type="ios-email"></Icon>&nbsp;<span>{{info.tenant.tenant_email}}</span></p>
+                                                    <p><Icon type="ios-clock"></Icon>&nbsp;<span>{{info.tenant.created_at}}</span></p>
+                                                    <br>
+                                                </div>                                                
+                                            </Panel>
+                                        </Collapse>
                                     </div>
                                 </Panel>
                             </Collapse>
@@ -71,8 +82,7 @@ export default {
                 this.users = res.users
                 for (let i = 0; i < this.users.length; i++){
                     getTenantsAndPeroperty(this.users[i].id).then(res => {
-                        this.users[i]['properties'] = res.properties
-                        this.users[i]['tenants'] = res.tenants
+                        this.users[i]['properties'] = res
                     }).catch(err => {
                         console.error(err)
                     })

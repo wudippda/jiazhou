@@ -6,11 +6,11 @@ var getEmailSetting = () => fetch('GET', 'email_setting/get_setting', {})
 
 var updateEmailSetting = (options) => fetch('POST', 'email_setting/update_setting', { options: options }, 'p')
 
-var uploadExcelFile = (file) => fetch('POST', 'excel_report/upload_report', { upload: file }, 'upload', 'progress')
+var uploadExcelFile = (file) => fetch('POST', 'housing_report/upload_report', { upload: file }, 'upload', 'progress')
 
-var getReports = (pageId) => fetch('GET', 'excel_report/list_report?page=' + pageId)
+var getReports = (pageId) => fetch('GET', 'housing_report/list_report?page=' + pageId)
 
-var deleteReport = (reportId) => fetch('POST', 'excel_report/delete_report', { id: reportId }, 'upload')
+var deleteReport = (reportId) => fetch('POST', 'housing_report/delete_report', { id: reportId }, 'upload')
 
 var getHouseOwners = (pageId) => fetch('GET', 'detail_list/list_user?page=' + pageId)
 

@@ -27,7 +27,7 @@
                                 <Button shape="circle" size="small" type="success" v-if="item.parsed">{{lanDisplay[languageType][name]['stateSuccess']}}</Button>
                             </p>
                             <br>
-                            <p>{{lanDisplay[languageType][name]['download']}}: <a style="font-size: 0.9em" :href="serverUrl + item.excel.url">{{lanDisplay[languageType][name]['downloadLink']}}</a></p>
+                            <p>{{lanDisplay[languageType][name]['download']}}: <a style="font-size: 0.9em" :href="serverUrl + item.report.url">{{lanDisplay[languageType][name]['downloadLink']}}</a></p>
                             <br>
                             <p>{{lanDisplay[languageType][name]['desc']}}: <span style="font-size: 0.9em">{{lanDisplay[languageType][name]['descContent']}}</span></p>
                         </Col>
