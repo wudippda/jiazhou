@@ -32,8 +32,11 @@ class HousingReportController < ApplicationController
     rescue StandardError => e
       Rails.logger.error(e.message)
       responseJson['error'] = e.message
+    ensure
+      responseJson['success'] = success
+      render responseJson
     end
-    render json: responseJson
+
   end
 
   def list_report

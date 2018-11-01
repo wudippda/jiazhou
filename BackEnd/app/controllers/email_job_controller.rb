@@ -1,4 +1,5 @@
 class EmailJobController < ApplicationController
+  include EmailJobDoc
 
   def create_email_job
     success = false

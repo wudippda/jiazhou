@@ -8,7 +8,7 @@ class DetailListController < ApplicationController
   end
 
   def find_property_and_tenant_by_user
-    userId = params[:userId]
+    userId = params[:id]
     user = User.find_by(id: userId)
     if user
       properties = user.properties
@@ -20,22 +20,29 @@ class DetailListController < ApplicationController
       end
       render json: res
     else
-      render json: {error: "No user found with id #{userId}"}
+      render json: {success: false, error: "No user found with id #{userId}"}
     end
   end
 
   # public apis
   def find_expenses
-    res = nil
+    res = Array.new
+    success = false
     startDate = params[:startDate]
     endDate = params[:endDate]
-    userId = params[:userId]
+    userId = params[:id]
 
-    User.find_by(id: userId).properties.each do |property|
-      res = property.findExpensesBetween(DateTime.strptime(startDate, EXPENSE_DATE_FORMAT_STRING), DateTime.strptime(endDate, EXPENSE_DATE_FORMAT_STRING), :category)
-      break
+    begin
+      user = User.find_by!(id: userId)
+      user.properties.each do |property|
+        res = property.findExpensesBetween(DateTime.strptime(startDate, EXPENSE_DATE_FORMAT_STRING), DateTime.strptime(endDate, EXPENSE_DATE_FORMAT_STRING), :category)
+        success = true
+        break
+      end
+    rescue ActiveRecord::RecordNotFound, StandardError => e
+      Rails.logger.error(e)
     end
-    render json: {res: res}
+    render json: {success: success, res: res}
   end
 
 end
