@@ -75,6 +75,21 @@ var lan = {
         },
         HousingPage: {
             title: 'Housing Center'
+        },
+        EmailJobPage: {
+            title: 'Email Job Center',
+            newJobBtn: 'New Job',
+            newJobForm: {
+                header: 'New Email Job',
+                jobName: 'Job Name',
+                jobType: 'Job Type',
+                from: 'From',
+                to: 'To',
+                config: 'Config',
+                submitBtn: 'Submit'
+            },
+            tabJobLabel: 'Current Jobs',
+            tabHistoryLabel: 'History'
         }
     },
     CN: {
@@ -153,6 +168,21 @@ var lan = {
         },
         HousingPage: {
             title: '房产中心'
+        },
+        EmailJobPage: {
+            title: '邮件任务中心',
+            newJobBtn: '新建任务',
+            newJobForm: {
+                header: '新邮件任务',
+                jobName: '任务名',
+                jobType: '任务类型',
+                from: '发送方',
+                to: '收件方',
+                config: '相关配置',
+                submitBtn: '提交'
+            },
+            tabJobLabel: '当前任务',
+            tabHistoryLabel: '发件历史'
         }
     }
 }

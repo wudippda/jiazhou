@@ -107,7 +107,7 @@ export default {
             this.isUploading = true
             uploadExcelFile(this.testFile).then(res => {
                 console.log(res)
-                if (res['uploadSuccess'] !== undefined && res['uploadSuccess'] === true) {
+                if (res['success'] !== undefined && res['success'] === true) {
                     this.$Notice.success({
                         title: this.lanDisplay[this.languageType][this.name]['success']['successToUpload']['title'],
                         desc: this.lanDisplay[this.languageType][this.name]['success']['successToUpload']['desc']
