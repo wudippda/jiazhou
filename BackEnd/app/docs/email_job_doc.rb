@@ -9,11 +9,11 @@ module EmailJobDoc
   param :from, String, :desc => 'Email address that the be sent from', :required => true
   param :to, String, :desc => 'A semicolon-separated list of email addresses for candidates who should recieve this email (e.g. abc@abc.com;123@123.com)', :required => true
   param :job_type, [:now, :delay, :schedule], :desc => 'Type of the job', :required => true
-  param :config, Hash, :desc => 'The configuration for "schedule" job or "delay" job, NOT required for "now" job' do
-    param :cron, String, :desc => "cron schedule for schedule job"
-    param :time_zone, String, :desc => "The timezone used to run schedule job"
+  param :config, Hash, :desc => 'The configuration for "schedule" job or "delay" job, NOT required for "now" job', :required => true do
+    param :cron, String, :desc => "cron schedule for schedule job", :required => true
+    param :time_zone, String, :desc => "The timezone used to run schedule job. The value should be one of the keys in ActiveSupport::TimeZone::MAPPING", :required => true
   end
-  example responseExample
+  example "job_name=somejob & from=abc@abc.com & to=123@123.com;456@456.com & job_type=schedule & config={\"cron\":\"* * * * *\", \"time_zone\":\"Beijing\"}"
   def create_email_job ;end
 
   api :POST, '/email_job/update_job', 'Update the settings for existing email job'
