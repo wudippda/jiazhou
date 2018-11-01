@@ -23,5 +23,6 @@ module Jiazhou
         resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end
+    #config.force_ssl = true
   end
 end

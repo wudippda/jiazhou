@@ -298,6 +298,7 @@ class ReportController < ApplicationController
     return files
   end
 
+  public
   def parse_report
     respondJson = {}
     parseSuccess = false
