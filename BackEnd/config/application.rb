@@ -23,6 +23,7 @@ module Jiazhou
         resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end
+    config.read_encrypted_secrets = true
     #config.force_ssl = true
   end
 end

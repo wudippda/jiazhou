@@ -1,9 +1,16 @@
-development: &development
-  address: "mail.sap.corp"
+---
+development:
+  address: mail.sap.corp
   port: 25
-  openssl_verify_mode: 'none'
+  openssl_verify_mode: none
   enable_starttls_auto: true
-
+  username: cUhSa3FpNkVRRHozemhjOEt3T1pBUWVYN09IREdEY3FKZTRyZW5ud3g5az0tLU1MdFZWOHFYTlVHck9kMzUwWm9OQ2c9PQ==--729d49ccdb9b35b8d81727bc4ba44ff2cc694114
+  password: YkxMR25waUIwL1pwU3g2cE91LzFtSXplN1V6dUZnRmErdHdVWWIxNkFWWT0tLXBCKzNxWmdVeUxjM21acnhtU2xkc2c9PQ==--a7633744bce2691b3c477e71cb030673cf2e5a9f
 production:
-  <<: *development
-  default_from: "francis.zhong@sap.com"
+  address: mail.sap.corp
+  port: 25
+  openssl_verify_mode: none
+  enable_starttls_auto: true
+  default_from: francis.zhong@sap.com
+  password: 
+  username: 

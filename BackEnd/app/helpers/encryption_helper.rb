@@ -1,7 +1,7 @@
 module EncryptionHelper
 
   @@encryter = nil
-  SALT = ''
+  SALT = Rails.application.secrets.encryption_salt
 
   def self.initEncrypter
     len = ActiveSupport::MessageEncryptor.key_len
