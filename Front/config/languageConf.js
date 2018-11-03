@@ -80,7 +80,7 @@ var lan = {
             title: 'Email Job Center',
             newJobBtn: 'New Job',
             newJobForm: {
-                header: 'New Email Job',
+                header: 'The Email Job',
                 jobName: 'Job Name',
                 jobType: 'Job Type',
                 from: 'From',
@@ -89,7 +89,57 @@ var lan = {
                 submitBtn: 'Submit'
             },
             tabJobLabel: 'Current Jobs',
-            tabHistoryLabel: 'History'
+            tabHistoryLabel: 'History',
+            formError: 'Form should be compeleted',
+            createSuccessMsg: {
+                title: 'Success',
+                desc: 'Create email job success'
+            },
+            createFailMsg: {
+                title: 'Sorry',
+                desc: 'Create email job fail'
+            },
+            deleteSuccessMsg: {
+                title: 'Success',
+                desc: 'Delete email job success'
+            },
+            deleteFailMsg: {
+                title: 'Sorry',
+                desc: 'Delete email job fail'
+            },
+            startJobSuccessMsg: {
+                title: 'Success',
+                desc: 'Success to start a email job'
+            },
+            startJobFailMsg: {
+                title: 'Sorry',
+                desc: 'Start email job fail'
+            },
+            stopJobSuccessMsg: {
+                title: 'Success',
+                desc: 'Success to stop a email job'
+            },
+            stopJobFailMsg: {
+                title: 'Sorry',
+                desc: 'Stop email job fail'
+            },
+            updateJobSuccessMsg: {
+                title: 'Success',
+                desc: 'Success to update a email job'
+            },
+            updateJobFailMsg: {
+                title: 'Sorry',
+                desc: 'Update email job fail'
+            },
+            createTimeLabel: 'Created time',
+            fromEmailLabel: 'From',
+            toEmailLabel: 'To',
+            configLabel: 'Config',
+            nextTimeLabel: 'Next Time',
+            statusLabel: 'Status',
+            idle: 'IDLE',
+            scheduled: 'SCHEDULED',
+            active: 'ACTIVE'
         }
     },
     CN: {
@@ -173,7 +223,7 @@ var lan = {
             title: '邮件任务中心',
             newJobBtn: '新建任务',
             newJobForm: {
-                header: '新邮件任务',
+                header: '任务表格',
                 jobName: '任务名',
                 jobType: '任务类型',
                 from: '发送方',
@@ -182,7 +232,57 @@ var lan = {
                 submitBtn: '提交'
             },
             tabJobLabel: '当前任务',
-            tabHistoryLabel: '发件历史'
+            tabHistoryLabel: '发件历史',
+            formError: '表单填写不完整',
+            createSuccessMsg: {
+                title: '成功',
+                desc: '创建邮件任务成功'
+            },
+            createFailMsg: {
+                title: '出错了',
+                desc: '创建邮件任务失败'
+            },
+            deleteSuccessMsg: {
+                title: '成功',
+                desc: '删除邮件任务成功'
+            },
+            deleteFailMsg: {
+                title: '出错了',
+                desc: '创建邮件任务失败'
+            },
+            startJobSuccessMsg: {
+                title: '成功',
+                desc: '成功启动邮件任务'
+            },
+            startJobFailMsg: {
+                title: '出错了',
+                desc: '启动邮件任务失败'
+            },
+            stopJobSuccessMsg: {
+                title: '成功',
+                desc: '成功停止邮件任务'
+            },
+            stopJobFailMsg: {
+                title: '出错了',
+                desc: '停止邮件任务失败'
+            },
+            updateJobSuccessMsg: {
+                title: '成功',
+                desc: '成功更新邮件任务'
+            },
+            updateJobFailMsg: {
+                title: '出错了',
+                desc: '更新邮件任务失败'
+            },
+            createTimeLabel: '创建时间',
+            fromEmailLabel: '发送者',
+            toEmailLabel: '接收方',
+            configLabel: '执行设置',
+            nextTimeLabel: '下次执行时刻',
+            statusLabel: '状态',
+            idle: '空闲',
+            scheduled: '在周期队列',
+            active: '执行中'
         }
     }
 }
