@@ -40,7 +40,7 @@ class HousingReportController < ApplicationController
   end
 
   def list_report
-    results =  HousingReport.select(LIST_REPORT_SHOW_KEYS).order('created_at DESC').page(params[:page])
-    render json: {reports: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
+    results =  HousingReport.select(LIST_REPORT_SHOW_KEYS).order('created_at DESC').page(params[:page]) || Array.new
+    render json: { reports: results.as_json }.merge!(results.empty? ? {} : { totalPage: results.total_pages, currentPage: params[:page] })
   end
 end
