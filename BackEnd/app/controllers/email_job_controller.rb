@@ -1,6 +1,8 @@
 class EmailJobController < ApplicationController
   include EmailJobDoc
 
+  ALLOWED_TO_UPDATE = %w(from to config)
+
   def create_email_job
     success = false
     errors = Hash.new
@@ -25,8 +27,8 @@ class EmailJobController < ApplicationController
     begin
       emailJob = EmailJob.find_by!(id: params[:id])
       EmailJob.column_names.each do |attr|
-        # skip 'id' column
-        next if attr == 'id'
+        # skip not-allow-to-update column
+        next if !ALLOWED_TO_UPDATE.include?(attr)
         if params[attr]
           updates[attr] = params[attr]
         else
