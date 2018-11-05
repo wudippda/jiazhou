@@ -6,7 +6,7 @@
             </Breadcrumb>
             <br>
             <br>
-            <Button class="left" type="success" shape="circle" size="large" @click="clearForm();mode='create';createModal=true">{{lanDisplay[languageType][name]['newJobBtn']}} </Button>
+            <Button class="left" type="success" shape="circle" size="large" @click="prepareOpenCreateModal">{{lanDisplay[languageType][name]['newJobBtn']}} </Button>
         </div>
 
         <div>
@@ -36,9 +36,10 @@
                                         <br>
                                         <p>{{lanDisplay[languageType][name]['configLabel']}}: <span style="font-size: 0.9em">&nbsp;{{item.config}}</span></p>
                                         <br>
-                                        <p v-if="item.job_status === 'scheduled'">{{lanDisplay[languageType][name]['configLabel']}}:<span style="font-size: 0.9em">&nbsp;{{item.next_time}}</span></p>
+                                        <p v-if="item.job_status === 'scheduled'">{{lanDisplay[languageType][name]['nextTimeLabel']}}:<span style="font-size: 0.9em">&nbsp;{{item.next_time}}</span></p>
+                                        <br>
                                         <Button type="success" shape="circle" icon="play" style="float: left" v-if="item.job_status === 'idle'" @click="startJob(item)"></Button>
-                                        <Button type="error" shape="circle" icon="pause" style="float: left" v-if="item.job_status === 'schduled'" @click="stopJob(item)"></Button>
+                                        <Button type="error" shape="circle" icon="pause" style="float: left" v-if="item.job_status === 'scheduled'" @click="stopJob(item)"></Button>
                                     </Col>
                                 </Row>
                                 <a href="#" slot="extra" @click.prevent="startUpdateJob(item)" style="margin: 5px !important">
@@ -72,7 +73,7 @@
                     </FormItem>
                     <FormItem :label="lanDisplay[languageType][name]['newJobForm']['jobType']" prop='jobType'>
                         <Select v-model="newEmailJob.jobType" placeholder='...'>
-                            <Option v-for="item in jobTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Option v-for="item in languageType === 'CN' ? jobTypeListCN : jobTypeListEN" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
                     <FormItem :label="lanDisplay[languageType][name]['newJobForm']['from']" prop="from">
@@ -89,7 +90,7 @@
                 </Form>
             </div>
             <div slot="footer">
-                <Button type="primary" size="large" long :loading="createLoading" @click="createNewEmailJob">Submit</Button>
+                <Button type="primary" size="large" long :loading="createLoading" @click="createNewEmailJob">{{lanDisplay[languageType][name]['formSubmit']}}</Button>
             </div>
     </Modal>
     </div>
@@ -112,6 +113,7 @@ export default {
             currentPage: 1,
             totalPage: 1,
             createModal: false,
+            showCreateModal: true,
             createLoading: false,
             newEmailJob: {
                 jobName: '',
@@ -120,7 +122,7 @@ export default {
                 to: [],
                 config: '{"cron": "* * * * *", "timezone": "Beijing"}'
             },
-            jobTypeList: [
+            jobTypeListEN: [
                 {
                     value: 'now',
                     label: 'Now'
@@ -132,6 +134,20 @@ export default {
                 {
                     value: 'schedule',
                     label: 'Schedule'
+                }
+            ],
+            jobTypeListCN: [
+                {
+                    value: 'now',
+                    label: '即使任务'
+                },
+                {
+                    value: 'delay',
+                    label: '延时任务'
+                },
+                {
+                    value: 'schedule',
+                    label: '计划任务'
                 }
             ],
             ruleValidate: {
@@ -159,6 +175,11 @@ export default {
         }
     },
     methods: {
+        prepareOpenCreateModal () {
+            this.clearForm()
+            this.mode='create'
+            this.createModal=true
+        },
         changeTab (name) {
             this.currentTab = name
             this.initData(1)
@@ -186,7 +207,7 @@ export default {
                 } else {
                     this.$Notice.error({
                         title: this.lanDisplay[this.languageType][this.name]['deleteFailMsg']['title'],
-                        desc: this.lanDisplay[this.languageType][this.name]['deleteFailMsg']['desc']
+                        desc: this.lanDisplay[this.languageType][this.name]['deleteFailMsg']['desc'] + ':' + res['errors']['job_status']
                     })
                 }
             }).catch(err => {
@@ -365,13 +386,17 @@ export default {
         async initData (page) {
             if (this.currentTab === 'jobs') {
                     getEmailJobs(page).then(res => {
-                    console.log('Email jobs', res)
-                    this.emailJobList = res.jobs
-                    this.emailJobTotalPage = res.totalPage
-                    this.emailJobCurrentPage = Number.parseInt(res.currentPage)
-                }).catch(err => {
-                    console.error(err)
-                })
+                        console.log('Email jobs', res)
+                        this.emailJobList = res.jobs
+                        this.emailJobTotalPage = res.totalPage
+                        this.emailJobCurrentPage = Number.parseInt(res.currentPage)
+                        this.emailJobList.map(item => {
+                            // item['next_time'] = item['next_time'].replace('T', ',')
+                            item['next_time'] = item['next_time'].replace(/(\w+)-(\w+)-(\w+)T(\w+):(\w+):(\w+).(\w+)*/g, '$1-$2-$3, $4:$5:$6')
+                        })
+                    }).catch(err => {
+                        console.error(err)
+                    })
             } else if (this.currentTab === 'history') {
                 getJobHistory(page).then(res => {
                     console.log('job history', res)
@@ -400,6 +425,56 @@ export default {
         window.onresize = function test() {
             that.clientWidth = document.documentElement.clientWidth
             that.clientHeight = document.documentElement.clientHeight
+        }
+
+
+
+
+
+
+        let row_data = {
+          "-Xdebug java.compiler": {
+            "lastModifyTime": 1541036201532,
+            "value": {
+              "lastModifyTime": 1540978504166,
+              "value": "NONE -Xrunjdwp:transport"
+            }
+          },
+          "com.successfactors.liveProfilePhotoCache.enabled": {
+            "lastModifyTime": 1541036201532,
+            "value": {
+              "lastModifyTime": 1540978504155,
+              "value": "true"
+            }
+          },
+          "schedulerservice.start_worker": {
+            "lastModifyTime": 1541036201532,
+            "value": {
+              "lastModifyTime": 1540978504155,
+              "value": "true"
+            }
+          },
+          "CacheService.zookeeper.address": {
+            "lastModifyTime": 1541036201532,
+            "value": {
+              "lastModifyTime": 1540978504155,
+              "value": "localhost:2181,localhost:2182,localhost:2183"
+            }
+          },
+          "sf.sfv4.bizXray.enabled": {
+            "lastModifyTime": 1541036201532,
+            "value": {
+              "lastModifyTime": 1540978504155,
+              "value": "true"
+            }
+          },
+          "sf.sfv4.emailengine.domain": {
+            "lastModifyTime": 1541036201532,
+            "value": {
+              "lastModifyTime": 1540978504155,
+              "value": "successfactors.com,sap.com,hotmail.com,yahoo.com"
+            }
+          }
         }
     },
     watch: {

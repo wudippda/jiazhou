@@ -91,6 +91,7 @@ var lan = {
             tabJobLabel: 'Current Jobs',
             tabHistoryLabel: 'History',
             formError: 'Form should be compeleted',
+            formSubmit: 'Submit',
             createSuccessMsg: {
                 title: 'Success',
                 desc: 'Create email job success'
@@ -234,6 +235,7 @@ var lan = {
             tabJobLabel: '当前任务',
             tabHistoryLabel: '发件历史',
             formError: '表单填写不完整',
+            formSubmit: '提交',
             createSuccessMsg: {
                 title: '成功',
                 desc: '创建邮件任务成功'

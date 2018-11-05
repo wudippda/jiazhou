@@ -37,7 +37,7 @@ var getJobHistory = (pageId) => fetch('GET', 'email_job/list_job_history?page=' 
 // For jupyter demo
 // var createUser = (email, pwd) => fetch('POST', 'users/create', { email: email, pwd: pwd }, 'p')
 
-// var login = (email, pwd) => fetch('POST', 'users/login', { email: email, pwd: pwd }, 'p')
+var login = (email, pwd) => fetch('POST', 'users/login', { email: email, pwd: pwd }, 'p')
 
 // var allocateDocker = (username, pwd) => fetch('POST', 'terminal', { user_id: username, dataset_id: 1, pwd: pwd }, 'ibm')
 
