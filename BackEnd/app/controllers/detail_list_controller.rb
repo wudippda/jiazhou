@@ -3,8 +3,8 @@ class DetailListController < ApplicationController
   LIST_USER_SHOW_KEYS = %w(id name email phone_number created_at)
 
   def list_user
-    results =  User.select(LIST_USER_SHOW_KEYS).page(params[:page])
-    render json:{ users: results.as_json, totalPage: results.total_pages, currentPage: params[:page]}
+    results =  User.select(LIST_USER_SHOW_KEYS).page(params[:page]) || Array.new
+    render json:{ users: results.as_json }.merge!(results.empty? ? {} : { totalPage: results.total_pages, currentPage: params[:page] })
   end
 
   def find_property_and_tenant_by_user
