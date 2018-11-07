@@ -32,7 +32,7 @@ var startEmailJob = (jobId) => fetch('POST', 'email_job/start_job', { id: jobId 
 
 var stopEmailJob = (jobId) => fetch('POST', 'email_job/stop_job', { id: jobId }, 'upload')
 
-var getJobHistory = (pageId) => fetch('GET', 'email_job/list_job_history?page=' + pageId)
+var getJobHistory = (pageId, id) => fetch('GET', 'email_job/list_job_history?page=' + pageId + '&id=' + id)
 
 // For jupyter demo
 // var createUser = (email, pwd) => fetch('POST', 'users/create', { email: email, pwd: pwd }, 'p')
