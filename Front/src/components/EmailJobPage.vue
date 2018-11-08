@@ -38,6 +38,7 @@
                                         <br>
                                         <p v-if="item.job_status === 'scheduled'">{{lanDisplay[languageType][name]['nextTimeLabel']}}:<span style="font-size: 0.9em">&nbsp;{{item.next_time}}</span></p>
                                         <br>
+                                        <a @click="turnToHistory(item)">{{lanDisplay[languageType][name]['historyLink']}}</a>
                                         <Button type="success" shape="circle" icon="play" style="float: left" v-if="item.job_status === 'idle'" @click="startJob(item)"></Button>
                                         <Button type="error" shape="circle" icon="pause" style="float: left" v-if="item.job_status === 'scheduled'" @click="stopJob(item)"></Button>
                                     </Col>
@@ -56,7 +57,11 @@
                 </TabPane>
 
                 <TabPane :label="lanDisplay[languageType][name]['tabHistoryLabel']" name="history">
-
+                    <Row type="flex" justify="center">
+                        <Table :columns="columns" :data="histories"></Table>
+                    </Row>
+                    <br>
+                    <Page :total="historyTotalPage * 5" size="small" :current="historyCurrentPage" page-size="5" @on-change="historyChangePage"></Page>
                 </TabPane>
             </Tabs>
             <br><br>
@@ -169,12 +174,59 @@ export default {
             emailJobList: [],
             emailJobTotalPage: 1,
             emailJobCurrentPage: 1,
+            historyTotalPage: 1,
+            historyCurrentPage: 1,
             selectItem: null,
             mode: 'create',
-            currentTab: 'jobs'
+            currentTab: 'jobs',
+            columns: [
+                {
+                    title: 'Execution Time',
+                    key: 'execution_time'
+                },
+                {
+                    title: 'Status',
+                    key: 'status'
+                },
+                {
+                    title: 'Success Time',
+                    key: 'success_time'
+                },
+                {
+                    title: 'Fail Time',
+                    key: 'fail_time'
+                },
+                {
+                    title: 'Success to List',
+                    key: 'success_to_list'
+                },
+                {
+                    title: 'Fail To List',
+                    key: 'fail_to_list'
+                },
+                {
+                    title: 'Fail Errors',
+                    key: 'fail_errors'
+                },
+                {
+                    title: 'Create At',
+                    key: 'create_at'
+                },
+                {
+                    title: 'Updated At',
+                    key: 'updated_at'
+                }
+            ],
+            histories: []
         }
     },
     methods: {
+        turnToHistory (item) {
+            console.log(item.id)
+            this.selectItem = item
+            this.initData(1, 'history', item.id) 
+            this.currentTab = 'history'           
+        },
         prepareOpenCreateModal () {
             this.clearForm()
             this.mode='create'
@@ -182,11 +234,16 @@ export default {
         },
         changeTab (name) {
             this.currentTab = name
-            this.initData(1)
+            this.initData(1, name)
+        },
+        historyChangePage (page) {
+            console.log(page)
+            this.historyCurrentPage = page
+            this.initData(page, 'history', this.selectItem.id)
         },
         emailJobChangePage (page) {
             this.emailJobCurrentPage = page
-            this.initData(page)
+            this.initData(page, 'jobs')
         },
         deleteJob (item) {
             if (item.job_status === 'active') {
@@ -203,7 +260,7 @@ export default {
                         title: this.lanDisplay[this.languageType][this.name]['deleteSuccessMsg']['title'],
                         desc: this.lanDisplay[this.languageType][this.name]['deleteSuccessMsg']['desc']
                     })
-                    this.initData(1)
+                    this.initData(1, 'jobs')
                 } else {
                     this.$Notice.error({
                         title: this.lanDisplay[this.languageType][this.name]['deleteFailMsg']['title'],
@@ -238,7 +295,7 @@ export default {
                     })
                     this.clearForm()
                     this.createModal = false
-                    this.initData(1)
+                    this.initData(1, 'jobs')
                 } else {
                     this.$Notice.error({
                         title: this.lanDisplay[this.languageType][this.name]['updateJobFailMsg']['title'],
@@ -263,7 +320,7 @@ export default {
                         title: this.lanDisplay[this.languageType][this.name]['startJobSuccessMsg']['title'],
                         desc: this.lanDisplay[this.languageType][this.name]['startJobSuccessMsg']['desc']
                     })
-                    this.initData(1)
+                    this.initData(1, 'jobs')
                 } else {
                     this.$Notice.error ({
                         title: this.lanDisplay[this.languageType][this.name]['startJobFailMsg']['title'],
@@ -286,7 +343,7 @@ export default {
                         title: this.lanDisplay[this.languageType][this.name]['stopJobSuccessMsg']['title'],
                         desc: this.lanDisplay[this.languageType][this.name]['stopJobSuccessMsg']['desc']
                     })
-                    this.initData(1)
+                    this.initData(1, 'jobs')
                 } else {
                     this.$Notice.error ({
                         title: this.lanDisplay[this.languageType][this.name]['stopJobFailMsg']['title'],
@@ -326,7 +383,7 @@ export default {
                             })
                             this.clearForm()
                             this.createModal = false
-                            this.initData(1)
+                            this.initData(1, 'jobs')
                         } else {
                             this.$Notice.error({
                                 title: this.lanDisplay[this.languageType][this.name]['createFailMsg']['title'],
@@ -383,24 +440,42 @@ export default {
                 console.error(err)
             })
         },
-        async initData (page) {
-            if (this.currentTab === 'jobs') {
+        async initData (page, type, id) {
+            if (type === 'jobs') {
                     getEmailJobs(page).then(res => {
                         console.log('Email jobs', res)
                         this.emailJobList = res.jobs
                         this.emailJobTotalPage = res.totalPage
                         this.emailJobCurrentPage = Number.parseInt(res.currentPage)
-                        this.emailJobList.map(item => {
-                            // item['next_time'] = item['next_time'].replace('T', ',')
-                            item['next_time'] = item['next_time'].replace(/(\w+)-(\w+)-(\w+)T(\w+):(\w+):(\w+).(\w+)*/g, '$1-$2-$3, $4:$5:$6')
-                        })
+
+                        for (let i = 0; i < this.emailJobList.length; i++) {
+                            console.log(this.emailJobList[i])
+                            if (this.emailJobList[i]['next_time'] !== null)
+                                this.emailJobList[i]['next_time'] = this.emailJobList[i]['next_time'].replace(/(\w+)-(\w+)-(\w+)T(\w+):(\w+):(\w+).(\w+)*/g, '$1-$2-$3, $4:$5:$6')
+                        }
                     }).catch(err => {
                         console.error(err)
                     })
-            } else if (this.currentTab === 'history') {
-                getJobHistory(page).then(res => {
-                    console.log('job history', res)
+            } else if (type === 'history') {
+                getJobHistory(page, id).then(res => {
+                    console.log(res)
+                    this.historyCurrentPage = Number.parseInt(res.currentPage)
+                    this.historyTotalPage = res.totalPage
 
+                    this.histories = []
+                    for (let i = 0; i < res.histories.length; i++) {
+                        this.histories.push({
+                            execution_time: res.histories[i]['execution_time'].replace(/(\w+)-(\w+)-(\w+)T(\w+):(\w+):(\w+).(\w+)*/g, '$1-$2-$3, $4:$5:$6'),
+                            status: res.histories[i]['job_history_status'],
+                            success_time: res.histories[i]['success_to'],
+                            fail_time: res.histories[i]['fail_to'],
+                            success_to_list: res.histories[i]['success_to_list'],
+                            fail_to_list: res.histories[i]['fail_to_list'],
+                            fail_errors: res.histories[i]['fail_errors'],
+                            create_at: res.histories[i]['created_at'].replace(/(\w+)-(\w+)-(\w+)T(\w+):(\w+):(\w+).(\w+)*/g, '$1-$2-$3, $4:$5:$6'),
+                            updated_at: res.histories[i]['updated_at'].replace(/(\w+)-(\w+)-(\w+)T(\w+):(\w+):(\w+).(\w+)*/g, '$1-$2-$3, $4:$5:$6')
+                        })
+                    }
                 }).catch(err => {
                     console.error(err)
                 })
@@ -412,7 +487,7 @@ export default {
         this.languageType = this.$route.params.lan
         this.lanDisplay = lan
 
-        this.initData(1)
+        this.initData(1, 'jobs')
         this.getAllUsers()
     },
     mounted () {
@@ -427,55 +502,6 @@ export default {
             that.clientHeight = document.documentElement.clientHeight
         }
 
-
-
-
-
-
-        let row_data = {
-          "-Xdebug java.compiler": {
-            "lastModifyTime": 1541036201532,
-            "value": {
-              "lastModifyTime": 1540978504166,
-              "value": "NONE -Xrunjdwp:transport"
-            }
-          },
-          "com.successfactors.liveProfilePhotoCache.enabled": {
-            "lastModifyTime": 1541036201532,
-            "value": {
-              "lastModifyTime": 1540978504155,
-              "value": "true"
-            }
-          },
-          "schedulerservice.start_worker": {
-            "lastModifyTime": 1541036201532,
-            "value": {
-              "lastModifyTime": 1540978504155,
-              "value": "true"
-            }
-          },
-          "CacheService.zookeeper.address": {
-            "lastModifyTime": 1541036201532,
-            "value": {
-              "lastModifyTime": 1540978504155,
-              "value": "localhost:2181,localhost:2182,localhost:2183"
-            }
-          },
-          "sf.sfv4.bizXray.enabled": {
-            "lastModifyTime": 1541036201532,
-            "value": {
-              "lastModifyTime": 1540978504155,
-              "value": "true"
-            }
-          },
-          "sf.sfv4.emailengine.domain": {
-            "lastModifyTime": 1541036201532,
-            "value": {
-              "lastModifyTime": 1540978504155,
-              "value": "successfactors.com,sap.com,hotmail.com,yahoo.com"
-            }
-          }
-        }
     },
     watch: {
         '$route' (to, from) {
