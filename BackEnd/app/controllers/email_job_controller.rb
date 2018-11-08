@@ -1,7 +1,8 @@
 class EmailJobController < ApplicationController
   include EmailJobDoc
 
-  ALLOWED_TO_UPDATE = %w(from to config)
+  EMAIL_JOB_ALLOWED_TO_UPDATE = %w(from to config)
+  EMAIL_TASK_ALLOWED_TO_UPDATE = %w(task_type_id task_params)
 
   def create_email_job
     success = false
@@ -9,7 +10,7 @@ class EmailJobController < ApplicationController
 
     ActiveRecord::Base.transaction do
       emailJob = EmailJob.create!({job_name: params[:job_name], from: params[:from], to: params[:to], job_type: params[:job_type], config: params[:config]})
-      emailJob.job_status_idle!
+      emailJob.create_email_task!({task_type_id: params[:task_type_id], task_params: params[:task_params]})
     end
     success = true
   rescue ActiveRecord::RecordInvalid, ArgumentError => e
@@ -23,25 +24,30 @@ class EmailJobController < ApplicationController
     success = false
     errors = Hash.new
     updates = Hash.new
+    taskUpdates = Hash.new
 
     begin
-      emailJob = EmailJob.find_by!(id: params[:id])
-      EmailJob.column_names.each do |attr|
-        # skip not-allow-to-update column
-        next if !ALLOWED_TO_UPDATE.include?(attr)
-        if params[attr]
-          updates[attr] = params[attr]
-        else
-          updates.delete(attr)
-        end
+      ActiveRecord::Base.transaction do
+        emailJob = EmailJob.find_by!(id: params[:id])
+        EMAIL_JOB_ALLOWED_TO_UPDATE.each { |attr| updates[attr] = params[attr] if params[attr] }
+        emailJob.update!(updates) if !updates.empty?
+
+        EMAIL_TASK_ALLOWED_TO_UPDATE.each { |taskAttr| taskUpdates[taskAttr] = params[taskAttr] if params[taskAttr]}
+        emailJob.email_task.update!(taskUpdates) if !taskUpdates.empty?
       end
-      emailJob.update!(updates)
+
       success = true
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, ArgumentError => e
       Rails.logger.error(e.message)
       errors = e.message
     end
     render json: errors.size > 0 ? {errors: errors}.merge!({success: success}) : {success: success}
+  end
+
+  def get_task_id_mapping
+    mapping = Array.new
+    EmailTaskHelper.getTaskTypes.each { |task| mapping << {id: task['id'], taskName: task['taskName']} }
+    render json: mapping
   end
 
   def list_email_job
@@ -113,7 +119,7 @@ class EmailJobController < ApplicationController
         when EmailJob.job_types[:now]
           # run as one-shot resque job
           if emailJob.job_status_idle?
-            Resque.enqueue(SendEmailJob, jobId, User.find_by(email: emailJob.email), emailJob.to)
+            Resque.enqueue(SendEmailJob, emailJob.id, emailJob.from, emailJob.to)
             emailJob.update(next_time: DateTime.now)
             success = true
           end

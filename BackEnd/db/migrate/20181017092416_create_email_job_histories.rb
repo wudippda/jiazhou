@@ -10,6 +10,7 @@ class CreateEmailJobHistories < ActiveRecord::Migration[5.1]
       t.string :success_to_list
       t.string :fail_to_list
       t.string :fail_errors
+      t.string :job_errors
 
       t.timestamps
     end

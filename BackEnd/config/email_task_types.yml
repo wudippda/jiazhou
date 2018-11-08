@@ -1,0 +1,15 @@
+- id: 1
+  taskName: 'Send Monthly Report'
+  className: 'MonthlyReportMailer'
+  task_params:
+    - name: 'year'
+      type: 'string'
+    - name: 'month'
+      type: 'string'
+
+- id: 2
+  taskName: 'Send Yearly Report'
+  className: 'YearlyReportMailer'
+  task_params:
+    - name: 'year'
+      type: 'string'

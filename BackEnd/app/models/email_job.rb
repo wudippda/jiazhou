@@ -1,5 +1,6 @@
 class EmailJob < ApplicationRecord
   has_many :email_job_histories, dependent: :delete_all
+  has_one :email_task
   self.per_page = 5
 
   enum job_type: { now: 'now', schedule: 'schedule', delay: 'delay' }, _prefix: :job_type

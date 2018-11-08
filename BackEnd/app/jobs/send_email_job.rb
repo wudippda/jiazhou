@@ -5,6 +5,9 @@ class SendEmailJob
   JOB_LOCK_DIR = File.join(Rails.root, 'tmp', 'job_lock')
   Resque.logger.level = Logger::INFO
 
+  class EmailJobError < StandardError
+  end
+
   def self.create_lock_file(file, jobId)
     FileUtils.mkdir_p(JOB_LOCK_DIR) if !Dir.exist?(JOB_LOCK_DIR)
     if File.exist? (file)
@@ -40,16 +43,30 @@ class SendEmailJob
 
     executionHistory = @emailJob.email_job_histories.create!({execution_time: DateTime.now})
     sendRes = {success_to: 0, fail_to: 0, total_to: 0,
-               success_to_list: Array.new, fail_to_list: Array.new, fail_errors: ''}
+               success_to_list: Array.new, fail_to_list: Array.new, fail_errors: Array.new, job_errors: Array.new}
+
+    taskTypeId = @emailJob.reload_email_task.task_type_id
+    taskParams = JSON.parse(@emailJob.reload_email_task.task_params).deep_symbolize_keys
+    raise EmailJobError.new("No email task found with id: #{taskTypeId}") if !EmailTaskHelper.validateTaskTypeId(taskTypeId)
+    raise EmailJobError.new("Insufficient parameter for email task type: #{taskTypeId}!") if !EmailTaskHelper.validateTaskParams(taskTypeId, taskParams)
+
+    task = EmailTaskHelper.getTaskTypes[taskTypeId - 1].deep_symbolize_keys
+    taskName = task[:taskName]
+    taskClassName = task[:className]
+
+    klass = taskClassName.classify.safe_constantize
+    raise EmailJobError.new("No class found with name: #{taskClassName}") if klass.nil?
+    raise EmailJobError.new("No 'send' method found for class: #{taskClassName}") if !klass.respond_to?('send_out')
+
+    Resque.logger.info("Email taskName: #{taskName}, Email ClassName: #{taskClassName}, Actuall Class: #{klass.name}")
 
     tos = to.split(EMAIL_SEPARATOR)
     sendRes[:total_to] = tos.size
-    now = DateTime.now
-    date = DateTime.strptime("#{now.month}/#{now.year}", ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
     tos.each do |t|
       begin
-        # Send monthly report for current month
-        MonthlyReportMailer.monthly_report_email(from, to, date).deliver_now
+        # Send email based on the email task
+        Resque.logger.info("Executing email task: #{taskName}")
+        klass.send_out(from, t, taskParams).deliver_now
         sendRes[:success_to] += 1
         sendRes[:success_to_list] << t
       rescue StandardError => e
@@ -58,11 +75,15 @@ class SendEmailJob
         Resque.logger.error("Error occurs when sending email to #{t}.")
         sendRes[:fail_to] += 1
         sendRes[:fail_to_list] << t
-        sendRes[:fail_errors] += "#{e.to_s};"
+        sendRes[:fail_errors] << {failedEmail: t, error: e.to_s}
       end
     end
-    updateHistory(executionHistory, sendRes)
+  rescue EmailJobError, NoMethodError, StandardError => e
+    Resque.logger.error(e)
+    Resque.logger.error(e.backtrace)
+    sendRes[:job_errors] << e.message
   ensure
+    updateHistory(executionHistory, sendRes)
     @emailJob.update(job_status: @oldStatus)
     delete_lock_file(lockFilePath)
     updateNextExecutionTime
@@ -70,7 +91,7 @@ class SendEmailJob
 
   def self.updateNextExecutionTime
     if @emailJob.job_type_schedule?
-      config = JSON.parse(@emailJob.config).symbolize_keys
+      config = JSON.parse(@emailJob.config).deep_symbolize_keys
       if !@emailJob.config.nil? && config[:cron]
         timeFormat = ApplicationHelper::EOTIME_DATE_FORMAT_STRING
         nextTime = DateTime.strptime(Rufus::Scheduler.parse(config[:cron]).next_time.to_s, timeFormat)
@@ -79,7 +100,7 @@ class SendEmailJob
       else
         Rails.logger.error("No 'cron' config found for job #{@emailJob.id}")
       end
-    elsif @emailjob.job_type_now?
+    elsif @emailJob.job_type_now?
       @emailJob.update(next_time: nil)
     end
   end

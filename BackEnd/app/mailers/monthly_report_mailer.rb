@@ -13,14 +13,20 @@ class MonthlyReportMailer < ApplicationMailer
   after_action :set_email_configuration
   helper_method :costValueToStr
 
-  def monthly_report_email(from, to, date)
+  def send_out(from, to, taskParams)
+    monthly_report_email(from, to, taskParams)
+  end
+
+  def monthly_report_email(from, to, taskParams)
+    date = DateTime.strptime("#{taskParams[:month]}/#{taskParams[:year]}", ApplicationHelper::EXPENSE_DATE_FORMAT_STRING)
     dt = date
-    Rails.logger.debug("Date passed: #{dt}")
-    @receiver = User.find_by!(email: from)
+    Rails.logger.debug("Date parsed: #{dt}")
+    @receiver = User.find_by!(email: to)
 
     @month = dt.month
     @year = dt.year
     Rails.logger.debug("Year: #{@year}, Month: #{@month}")
+    Resque.logger.debug("In Email Job! Year: #{@year}, Month: #{@month}")
 
     temp = Hash.new
     @expenses = Hash.new
@@ -30,7 +36,7 @@ class MonthlyReportMailer < ApplicationMailer
     temp.each { |key, value| @expenses[key] = value.group_by{ |e| e.property_id } }
 
     Rails.logger.debug(@expenses)
-    raise ExpenseMissingException.new("Can not find any expense for user #{from} within #{dt}") if @expenses.empty?
+    raise ExpenseMissingException.new("Can not find any expense for user #{to} within #{dt}") if @expenses.empty?
 
     @totalIncomes = 0
     @outgoingSubtotal = Hash[@propertyIds.map {|x| [x, 0]}]
@@ -38,7 +44,7 @@ class MonthlyReportMailer < ApplicationMailer
     @expensePieChartUrl = generateExpenseChart(temp)
     @propertyIncomePieChartUrl = generatePropertyIncomeChart(temp)
 
-    mail(from: from, to: to, subject: generate_subject)
+    mail(from: from, to: to, subject: generate_subject, template_name: 'monthly_report_email')
   rescue StandardError => e
     raise e
   end
@@ -101,8 +107,8 @@ class MonthlyReportMailer < ApplicationMailer
 
   def set_email_configuration
     @email_settings = EmailSettingHelper.get_email_setting(Rails.env)
-    Rails.logger.debug(@email_settings.symbolize_keys)
+    Resque.logger.info(@email_settings.symbolize_keys)
     mail.delivery_method.settings.merge!(@email_settings.symbolize_keys)
-    Rails.logger.debug(mail.delivery_method.settings)
+    Resque.logger.info("Email settings after merge: #{mail.delivery_method.settings}")
   end
 end
