@@ -3,7 +3,7 @@ class EmailSettingController < ApplicationController
 
   def get_email_setting
     @email_setting = EmailSettingHelper.get_email_setting(Rails.env)
-    render json: @email_setting.as_json
+    render json: @email_setting.reject { |k, v| k == 'password' }.as_json
   end
 
   def update_email_setting
